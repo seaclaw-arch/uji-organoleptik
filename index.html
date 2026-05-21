@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uji-Organoleptik v2.0 | Silahkan Pilih Metode Uji</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         :root {
             --spss-blue: #1a3a5c;
@@ -19,506 +18,70 @@
             --text-primary: #1a1a1a;
             --text-secondary: #5a5a5a;
             --border: #d0d0d0;
-            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
             --header-bg: #e8ecf1;
-            --selection-bg: rgba(204, 229, 255, 0.6);
+            --selection-bg: rgba(204,229,255,0.6);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box
-        }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: var(--bg-main);
-            color: var(--text-primary);
-            line-height: 1.6;
-            user-select: none
-        }
-
-        .toolbar {
-            background: linear-gradient(135deg, var(--spss-blue), var(--spss-light));
-            color: #fff;
-            padding: .8rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, .3);
-            position: sticky;
-            top: 0;
-            z-index: 1000
-        }
-
-        .toolbar-logo {
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            background: linear-gradient(45deg, #fff, #e0e0e0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent
-        }
-
-        .toolbar-menu {
-            display: flex;
-            gap: .5rem;
-            flex-wrap: wrap
-        }
-
-        .toolbar-menu button {
-            background: rgba(255, 255, 255, .1);
-            border: 1px solid rgba(255, 255, 255, .25);
-            color: #fff;
-            padding: .45rem .85rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: .8rem;
-            transition: all .3s;
-            white-space: nowrap
-        }
-
-        .toolbar-menu button:hover {
-            background: rgba(255, 255, 255, .2)
-        }
-
-        .toolbar-menu button.active {
-            background: var(--accent);
-            border-color: var(--accent)
-        }
-
-        .warning-bar {
-            background: var(--warning);
-            color: #1a1a1a;
-            padding: .4rem 1.5rem;
-            text-align: center;
-            font-size: .8rem;
-            font-weight: 600;
-            display: none;
-            cursor: pointer
-        }
-
-        .container {
-            max-width: 100%;
-            margin: 0;
-            padding: .5rem;
-            height: calc(100vh - 95px);
-            display: flex;
-            flex-direction: column
-        }
-
-        .tab-navigation {
-            background: var(--bg-card);
-            border-radius: 6px 6px 0 0;
-            box-shadow: var(--shadow);
-            display: flex;
-            border-bottom: 3px solid var(--spss-blue);
-            flex-shrink: 0
-        }
-
-        .tab-button {
-            padding: .65rem 1.3rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--text-secondary);
-            transition: all .3s;
-            font-size: .85rem
-        }
-
-        .tab-button:hover {
-            color: var(--spss-blue);
-            background: rgba(26, 58, 92, .03)
-        }
-
-        .tab-button.active {
-            color: var(--spss-blue);
-            background: rgba(26, 58, 92, .06);
-            border-bottom: 3px solid var(--accent);
-            margin-bottom: -3px
-        }
-
-        .excel-toolbar {
-            background: #f8f9fa;
-            border: 1px solid var(--border);
-            padding: .4rem .8rem;
-            display: flex;
-            gap: .4rem;
-            align-items: center;
-            flex-wrap: wrap;
-            flex-shrink: 0
-        }
-
-        .excel-toolbar button {
-            padding: .35rem .7rem;
-            border: 1px solid var(--border);
-            background: #fff;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: .75rem;
-            transition: all .2s
-        }
-
-        .excel-toolbar button:hover {
-            background: #e8ecf1
-        }
-
-        .cell-ref {
-            background: #fff;
-            border: 2px solid var(--border);
-            padding: .25rem .5rem;
-            border-radius: 3px;
-            font-weight: 600;
-            font-size: .8rem;
-            min-width: 70px;
-            text-align: center;
-            color: var(--spss-blue);
-            font-family: Consolas, monospace
-        }
-
-        .formula-bar {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: .4rem;
-            background: #fff;
-            border: 2px solid var(--border);
-            border-radius: 3px;
-            padding: 0 .4rem
-        }
-
-        .formula-bar input {
-            flex: 1;
-            border: none;
-            padding: .35rem;
-            font-size: .8rem;
-            outline: none;
-            font-family: Consolas, monospace
-        }
-
-        .data-view {
-            background: var(--bg-card);
-            border-radius: 0 0 6px 6px;
-            box-shadow: var(--shadow);
-            overflow: auto;
-            flex: 1;
-            position: relative
-        }
-
-        .excel-grid {
-            border-collapse: collapse;
-            font-size: .78rem;
-            table-layout: fixed;
-            user-select: none
-        }
-
-        .excel-grid th {
-            background: var(--header-bg);
-            border: 1px solid var(--border);
-            padding: .35rem;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            font-weight: 600;
-            text-align: center;
-            min-width: 85px;
-            font-size: .78rem;
-            color: #333
-        }
-
-        .excel-grid th.corner-header {
-            z-index: 11;
-            left: 0;
-            min-width: 35px;
-            width: 35px;
-            background: #d0d8e0
-        }
-
-        .excel-grid th.row-header {
-            position: sticky;
-            left: 0;
-            z-index: 9;
-            background: #f0f2f5;
-            min-width: 35px;
-            width: 35px;
-            color: #666
-        }
-
-        .excel-grid td {
-            border: 1px solid #d9d9d9;
-            padding: 0;
-            text-align: center;
-            position: relative;
-            cursor: cell;
-            background: #fff;
-            height: 26px
-        }
-
-        .excel-grid td .cell-content {
-            width: 100%;
-            height: 100%;
-            padding: .3rem .35rem;
-            text-align: center;
-            font-size: .78rem;
-            pointer-events: none;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis
-        }
-
-        .excel-grid td.active-cell {
-            outline: 2px solid #0066cc !important;
-            outline-offset: -2px;
-            z-index: 5 !important;
-            background: #fff !important
-        }
-
-        .excel-grid td.selected-cell {
-            background: var(--selection-bg) !important;
-            outline: 1px solid rgba(0, 102, 204, .3);
-            outline-offset: -1px
-        }
-
-        .excel-grid td.missing-cell {
-            background: #ffe0e0 !important
-        }
-
-        .excel-grid td.editing {
-            padding: 0;
-            outline: 2px solid #06c !important;
-            outline-offset: -2px;
-            z-index: 6 !important;
-            background: #fff !important
-        }
-
-        .excel-grid td.editing .cell-content {
-            display: none
-        }
-
-        .excel-grid td input.cell-editor {
-            width: 100%;
-            height: 100%;
-            border: none;
-            padding: .3rem .35rem;
-            text-align: center;
-            font-size: .78rem;
-            outline: none;
-            background: #fff
-        }
-
-        .excel-grid tr:nth-child(even) td {
-            background: #fafbfc
-        }
-
-        .status-bar {
-            background: #f0f2f5;
-            border-top: 2px solid var(--border);
-            padding: .25rem 1rem;
-            display: flex;
-            justify-content: space-between;
-            font-size: .7rem;
-            color: #666;
-            flex-shrink: 0
-        }
-
-        .missing-indicator {
-            background: var(--danger);
-            color: #fff;
-            padding: .15rem .5rem;
-            border-radius: 10px;
-            font-size: .65rem;
-            font-weight: 600;
-            display: none
-        }
-
-        .variable-view {
-            background: var(--bg-card);
-            border-radius: 0 0 6px 6px;
-            box-shadow: var(--shadow);
-            padding: 1.5rem;
-            overflow-y: auto;
-            display: none
-        }
-
-        .variable-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 1.2rem
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: .4rem
-        }
-
-        .form-group label {
-            font-weight: 600;
-            color: var(--spss-blue);
-            font-size: .85rem
-        }
-
-        .form-group select,
-        .form-group input {
-            padding: .55rem;
-            border: 2px solid var(--border);
-            border-radius: 4px;
-            font-size: .85rem
-        }
-
-        .output-viewer {
-            background: var(--bg-card);
-            border-radius: 0 0 6px 6px;
-            box-shadow: var(--shadow);
-            padding: 1.5rem;
-            overflow-y: auto;
-            display: none
-        }
-
-        .output-content {
-            font-family: Consolas, monospace;
-            background: #f8f9fa;
-            padding: 1.2rem;
-            border-radius: 4px;
-            border-left: 4px solid var(--accent);
-            white-space: pre-wrap;
-            font-size: .82rem;
-            line-height: 1.5;
-            max-height: 400px;
-            overflow-y: auto
-        }
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 1.2rem;
-            margin-top: 1.2rem
-        }
-
-        .chart-card {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, .05);
-            padding: 1.2rem;
-            border: 1px solid #e8e8e8
-        }
-
-        .results-summary {
-            background: linear-gradient(135deg, #e8f4f8, #f0f6ff);
-            padding: 1.2rem;
-            border-radius: 8px;
-            border: 2px solid var(--spss-blue);
-            margin-top: 1.2rem;
-            display: none
-        }
-
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: .8rem;
-            margin-top: .8rem
-        }
-
-        .stat-card {
-            background: #fff;
-            padding: .8rem;
-            border-radius: 6px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, .05)
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--spss-blue)
-        }
-
-        .btn {
-            padding: .5rem 1.2rem;
-            border: none;
-            border-radius: 4px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: .82rem
-        }
-
-        .btn-primary {
-            background: var(--spss-blue);
-            color: #fff
-        }
-
-        .btn-accent {
-            background: var(--accent);
-            color: #fff
-        }
-
-        .btn-sm {
-            padding: .3rem .7rem;
-            font-size: .72rem
-        }
-
-        .methodology-note {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            padding: .6rem 1rem;
-            border-radius: 4px;
-            font-size: .78rem;
-            margin: .5rem 0
-        }
-
-        .checklist {
-            list-style: none;
-            padding: 0
-        }
-
-        .checklist li {
-            margin: .3rem 0;
-            display: flex;
-            align-items: center;
-            gap: .4rem
-        }
-
-        .context-menu {
-            position: fixed;
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
-            z-index: 2000;
-            min-width: 200px;
-            display: none;
-            padding: .25rem 0
-        }
-
-        .context-menu-item {
-            padding: .45rem 1.2rem;
-            cursor: pointer;
-            font-size: .8rem;
-            display: flex;
-            align-items: center;
-            gap: .6rem
-        }
-
-        .context-menu-item:hover {
-            background: #e8ecf1
-        }
-
-        @media(max-width:768px) {
-            .toolbar {
-                flex-direction: column;
-                gap: .4rem;
-                padding: .4rem
-            }
-
-            .charts-grid {
-                grid-template-columns: 1fr
-            }
-
-            .variable-form {
-                grid-template-columns: 1fr
-            }
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg-main);color:var(--text-primary);line-height:1.6;user-select:none}
+        .toolbar{background:linear-gradient(135deg,var(--spss-blue),var(--spss-light));color:#fff;padding:.8rem 1.5rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.3);position:sticky;top:0;z-index:1000}
+        .toolbar-logo{font-size:1.6rem;font-weight:700;letter-spacing:1px;background:linear-gradient(45deg,#fff,#e0e0e0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .toolbar-menu{display:flex;gap:.5rem;flex-wrap:wrap}
+        .toolbar-menu button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;padding:.45rem .85rem;border-radius:4px;cursor:pointer;font-size:.8rem;transition:all .3s;white-space:nowrap}
+        .toolbar-menu button:hover{background:rgba(255,255,255,.2)}
+        .toolbar-menu button.active{background:var(--accent);border-color:var(--accent)}
+        .warning-bar{background:var(--warning);color:#1a1a1a;padding:.4rem 1.5rem;text-align:center;font-size:.8rem;font-weight:600;display:none;cursor:pointer}
+        .container{max-width:100%;margin:0;padding:.5rem;height:calc(100vh - 95px);display:flex;flex-direction:column}
+        .tab-navigation{background:var(--bg-card);border-radius:6px 6px 0 0;box-shadow:var(--shadow);display:flex;border-bottom:3px solid var(--spss-blue);flex-shrink:0}
+        .tab-button{padding:.65rem 1.3rem;background:none;border:none;cursor:pointer;font-weight:600;color:var(--text-secondary);transition:all .3s;font-size:.85rem}
+        .tab-button:hover{color:var(--spss-blue);background:rgba(26,58,92,.03)}
+        .tab-button.active{color:var(--spss-blue);background:rgba(26,58,92,.06);border-bottom:3px solid var(--accent);margin-bottom:-3px}
+        .excel-toolbar{background:#f8f9fa;border:1px solid var(--border);padding:.4rem .8rem;display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;flex-shrink:0}
+        .excel-toolbar button{padding:.35rem .7rem;border:1px solid var(--border);background:#fff;border-radius:3px;cursor:pointer;font-size:.75rem;transition:all .2s}
+        .excel-toolbar button:hover{background:#e8ecf1}
+        .cell-ref{background:#fff;border:2px solid var(--border);padding:.25rem .5rem;border-radius:3px;font-weight:600;font-size:.8rem;min-width:70px;text-align:center;color:var(--spss-blue);font-family:Consolas,monospace}
+        .formula-bar{flex:1;display:flex;align-items:center;gap:.4rem;background:#fff;border:2px solid var(--border);border-radius:3px;padding:0 .4rem}
+        .formula-bar input{flex:1;border:none;padding:.35rem;font-size:.8rem;outline:none;font-family:Consolas,monospace}
+        .data-view{background:var(--bg-card);border-radius:0 0 6px 6px;box-shadow:var(--shadow);overflow:auto;flex:1;position:relative}
+        .excel-grid{border-collapse:collapse;font-size:.78rem;table-layout:fixed;user-select:none}
+        .excel-grid th{background:var(--header-bg);border:1px solid var(--border);padding:.35rem;position:sticky;top:0;z-index:10;font-weight:600;text-align:center;min-width:85px;font-size:.78rem;color:#333}
+        .excel-grid th.corner-header{z-index:11;left:0;min-width:35px;width:35px;background:#d0d8e0}
+        .excel-grid th.row-header{position:sticky;left:0;z-index:9;background:#f0f2f5;min-width:35px;width:35px;color:#666}
+        .excel-grid td{border:1px solid #d9d9d9;padding:0;text-align:center;position:relative;cursor:cell;background:#fff;height:26px}
+        .excel-grid td .cell-content{width:100%;height:100%;padding:.3rem .35rem;text-align:center;font-size:.78rem;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .excel-grid td.active-cell{outline:2px solid #0066cc!important;outline-offset:-2px;z-index:5!important;background:#fff!important}
+        .excel-grid td.selected-cell{background:var(--selection-bg)!important;outline:1px solid rgba(0,102,204,.3);outline-offset:-1px}
+        .excel-grid td.missing-cell{background:#ffe0e0!important}
+        .excel-grid td.editing{padding:0;outline:2px solid #06c!important;outline-offset:-2px;z-index:6!important;background:#fff!important}
+        .excel-grid td.editing .cell-content{display:none}
+        .excel-grid td input.cell-editor{width:100%;height:100%;border:none;padding:.3rem .35rem;text-align:center;font-size:.78rem;outline:none;background:#fff}
+        .excel-grid tr:nth-child(even) td{background:#fafbfc}
+        .status-bar{background:#f0f2f5;border-top:2px solid var(--border);padding:.25rem 1rem;display:flex;justify-content:space-between;font-size:.7rem;color:#666;flex-shrink:0}
+        .missing-indicator{background:var(--danger);color:#fff;padding:.15rem .5rem;border-radius:10px;font-size:.65rem;font-weight:600;display:none}
+        .variable-view{background:var(--bg-card);border-radius:0 0 6px 6px;box-shadow:var(--shadow);padding:1.5rem;overflow-y:auto;display:none}
+        .variable-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.2rem}
+        .form-group{display:flex;flex-direction:column;gap:.4rem}
+        .form-group label{font-weight:600;color:var(--spss-blue);font-size:.85rem}
+        .form-group select,.form-group input{padding:.55rem;border:2px solid var(--border);border-radius:4px;font-size:.85rem}
+        .output-viewer{background:var(--bg-card);border-radius:0 0 6px 6px;box-shadow:var(--shadow);padding:1.5rem;overflow-y:auto;display:none}
+        .output-content{font-family:Consolas,monospace;background:#f8f9fa;padding:1.2rem;border-radius:4px;border-left:4px solid var(--accent);white-space:pre-wrap;font-size:.82rem;line-height:1.5;max-height:400px;overflow-y:auto}
+        .charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1.2rem;margin-top:1.2rem}
+        .chart-card{background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,.05);padding:1.2rem;border:1px solid #e8e8e8}
+        .results-summary{background:linear-gradient(135deg,#e8f4f8,#f0f6ff);padding:1.2rem;border-radius:8px;border:2px solid var(--spss-blue);margin-top:1.2rem;display:none}
+        .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.8rem;margin-top:.8rem}
+        .stat-card{background:#fff;padding:.8rem;border-radius:6px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+        .stat-value{font-size:1.5rem;font-weight:700;color:var(--spss-blue)}
+        .btn{padding:.5rem 1.2rem;border:none;border-radius:4px;font-weight:600;cursor:pointer;font-size:.82rem}
+        .btn-primary{background:var(--spss-blue);color:#fff}
+        .btn-accent{background:var(--accent);color:#fff}
+        .btn-sm{padding:.3rem .7rem;font-size:.72rem}
+        .methodology-note{background:#fff3cd;border:1px solid #ffc107;padding:.6rem 1rem;border-radius:4px;font-size:.78rem;margin:.5rem 0}
+        .checklist{list-style:none;padding:0}
+        .checklist li{margin:.3rem 0;display:flex;align-items:center;gap:.4rem}
+        .context-menu{position:fixed;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,.15);z-index:2000;min-width:200px;display:none;padding:.25rem 0}
+        .context-menu-item{padding:.45rem 1.2rem;cursor:pointer;font-size:.8rem;display:flex;align-items:center;gap:.6rem}
+        .context-menu-item:hover{background:#e8ecf1}
+        @media(max-width:768px){.toolbar{flex-direction:column;gap:.4rem;padding:.4rem}.charts-grid{grid-template-columns:1fr}.variable-form{grid-template-columns:1fr}}
     </style>
 </head>
 <body>
@@ -553,57 +116,32 @@
                 <button onclick="toggleMissing()">⚠️ Missing</button>
                 <span style="width:1px;height:20px;background:var(--border);margin:0 .15rem"></span>
                 <span class="cell-ref" id="cellRef">A1</span>
-                <div class="formula-bar"><input type="text" id="formulaInput" placeholder="fx"
-                        onkeydown="handleFormulaKey(event)" onfocus="formulaBarFocused()"></div>
+                <div class="formula-bar"><input type="text" id="formulaInput" placeholder="fx" onkeydown="handleFormulaKey(event)" onfocus="formulaBarFocused()"></div>
                 <button onclick="applyFormula()">✅</button>
             </div>
             <div class="data-view">
-                <table class="excel-grid" id="excelGrid">
-                    <thead id="gridHeader"></thead>
-                    <tbody id="gridBody"></tbody>
-                </table>
+                <table class="excel-grid" id="excelGrid"><thead id="gridHeader"></thead><tbody id="gridBody"></tbody></table>
             </div>
             <div class="status-bar">
                 <span id="statusMethod">Method: Jamak</span>
                 <span id="statusInfo">Samples: 3 | N: 10</span>
-                <span class="missing-indicator" id="missingIndicator" title="Persentase missing data">⚠️ Missing: 0%</span>
+                <span class="missing-indicator" id="missingIndicator">⚠️ Missing: 0%</span>
                 <span id="statusSelection">Ready</span>
             </div>
         </div>
         <div id="tab-variable" class="variable-view">
             <h3 style="color:var(--spss-blue);margin-bottom:1rem">⚙️ Konfigurasi</h3>
             <div class="variable-form">
-                <div class="form-group"><label>Jenis Uji</label><select id="varMethod"
-                        onchange="switchMethod(this.value)">
-                        <option value="jamak">Perbandingan Jamak</option>
-                        <option value="triangel">Triangel</option>
-                        <option value="duotrio">Duo-Trio</option>
-                        <option value="deskriptif">Deskriptif QDA</option>
-                    </select></div>
-                <div class="form-group"><label>Panelis / Atribut</label><input type="number" id="varPanelists"
-                        value="10" min="3" max="200"><small id="minPanelistNote"></small></div>
-                <div class="form-group"><label>α</label><select id="varAlpha">
-                        <option value="0.05">0.05 (95%)</option>
-                        <option value="0.01">0.01 (99%)</option>
-                    </select></div>
-                <div class="form-group" id="scaleGroup"><label>Skala</label><select id="varScale">
-                        <option value="9">9-point hedonic (1-9)</option>
-                        <option value="7">7-point (1-7)</option>
-                        <option value="5">5-point (1-5)</option>
-                        <option value="15">15 cm line scale (0-15)</option>
-                    </select></div>
-                <div class="form-group" id="qdaAttributesGroup" style="display:none"><label>Atribut QDA</label><input
-                        type="text" id="qdaAttributes" value="Warna,Aroma,Rasa,Tekstur,Aftertaste"></div>
-                <div class="form-group" id="trainedPanelGroup" style="display:none"><label>Panelis</label><select
-                        id="panelType">
-                        <option value="trained">Terlatih (≥40 jam)</option>
-                        <option value="semi">Semi-terlatih</option>
-                        <option value="consumer">Konsumen</option>
-                    </select></div>
+                <div class="form-group"><label>Jenis Uji</label><select id="varMethod" onchange="switchMethod(this.value)"><option value="jamak">Perbandingan Jamak</option><option value="triangel">Triangel</option><option value="duotrio">Duo-Trio</option><option value="deskriptif">Deskriptif QDA</option></select></div>
+                <div class="form-group"><label>Panelis / Atribut</label><input type="number" id="varPanelists" value="10" min="3" max="200"><small id="minPanelistNote"></small></div>
+                <div class="form-group"><label>α</label><select id="varAlpha"><option value="0.05">0.05 (95%)</option><option value="0.01">0.01 (99%)</option></select></div>
+                <div class="form-group" id="scaleGroup"><label>Skala</label><select id="varScale"><option value="9">9-point hedonic (1-9)</option><option value="7">7-point (1-7)</option><option value="5">5-point (1-5)</option><option value="15">15 cm line scale (0-15)</option></select></div>
+                <div class="form-group" id="qdaAttributesGroup" style="display:none"><label>Atribut QDA</label><input type="text" id="qdaAttributes" value="Warna,Aroma,Rasa,Tekstur,Aftertaste"></div>
+                <div class="form-group" id="trainedPanelGroup" style="display:none"><label>Panelis</label><select id="panelType"><option value="trained">Terlatih (≥40 jam)</option><option value="semi">Semi-terlatih</option><option value="consumer">Konsumen</option></select></div>
             </div>
             <div class="methodology-note" id="methodologyNote"></div>
             <div id="preAnalysisChecklist" style="margin:.8rem 0;padding:.8rem;background:#f8f9fa;border-radius:4px">
-                <strong>✅ Checklist Pra-Analisis (wajib untuk compliance ISO 6658 §7):</strong>
+                <strong>✅ Checklist Pra-Analisis (ISO 6658 §7):</strong>
                 <ul class="checklist">
                     <li><input type="checkbox" id="chkRandom"> Randomisasi kode sampel 3-digit</li>
                     <li><input type="checkbox" id="chkOrder"> Urutan penyajian di-random (Latin Square)</li>
@@ -619,21 +157,16 @@
             </div>
         </div>
         <div id="tab-output" class="output-viewer">
-            <div
-                style="display:flex;justify-content:space-between;align-items:center;padding-bottom:1rem;border-bottom:2px solid var(--spss-blue);margin-bottom:1rem">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:1rem;border-bottom:2px solid var(--spss-blue);margin-bottom:1rem">
                 <span style="font-size:1.1rem;font-weight:700;color:var(--spss-blue)">📊 Output Analisis</span>
                 <button class="btn btn-sm btn-primary" onclick="exportOutput()">📥 TXT</button>
             </div>
-            <div id="conclusionBox" style="display:none; background:linear-gradient(135deg,#d4edda,#e8f5e9); 
-     padding:1.2rem; border-radius:8px; border:2px solid var(--success); margin-bottom:1rem;">
-    <h3 style="color:var(--success);margin-bottom:.5rem">📋 KESIMPULAN CEPAT</h3>
-    <div id="conclusionContent" style="font-size:.9rem;line-height:1.6"></div>
-</div>
-            <div class="output-content" id="outputContent">Uji-Organoleptik v2.0 — Siap digunakan</div>
-            <div class="results-summary" id="resultsSummary">
-                <h3>📈 Ringkasan</h3>
-                <div class="stat-grid" id="statGrid"></div>
+            <div id="conclusionBox" style="display:none;background:linear-gradient(135deg,#d4edda,#e8f5e9);padding:1.2rem;border-radius:8px;border:2px solid var(--success);margin-bottom:1rem">
+                <h3 style="color:var(--success);margin-bottom:.5rem">📋 KESIMPULAN CEPAT</h3>
+                <div id="conclusionContent" style="font-size:.9rem;line-height:1.6"></div>
             </div>
+            <div class="output-content" id="outputContent">Uji-Organoleptik v2.0 — Siap digunakan</div>
+            <div class="results-summary" id="resultsSummary"><h3>📈 Ringkasan</h3><div class="stat-grid" id="statGrid"></div></div>
             <div class="charts-grid" id="chartsContainer"></div>
         </div>
     </div>
@@ -644,1412 +177,312 @@
         <div class="context-menu-item" onclick="toggleMissing()">⚠️ Tandai Missing</div>
         <div class="context-menu-item" onclick="clearSelectedCells()">🗑️ Clear</div>
     </div>
-    <script>
-        (function() {
-            'use strict';
+<script>
+(function(){
+'use strict';
 
-            // ==================== SANITASI & UTILS ====================
-            const sanitizeHTML = str => String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g,
-                '&gt;').replace(/"/g, '&quot;');
-            const escapeCSV = val => {
-                const s = String(val);
-                return (s.includes(',') || s.includes('"') || s.includes('\n')) ? `"${s.replace(/"/g, '""')}"` :
-                s
-            };
-            const notif = (msg, type = 'success') => {
-                const n = document.createElement('div');
-                n.style.cssText = 'position:fixed;top:15px;right:15px;background:' + (type === 'warning' ?
-                    '#d4a017' : '#2d8b4e') +
-                    ';color:#fff;padding:.6rem 1.2rem;border-radius:6px;font-weight:600;z-index:3000;animation:slideIn .3s ease-out';
-                n.textContent = msg;
-                document.body.appendChild(n);
-                setTimeout(() => n.remove(), 2000)
-            };
+// ==================== SANITASI & UTILS ====================
+const sanitizeHTML=str=>String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const escapeCSV=val=>{const s=String(val);return(s.includes(',')||s.includes('"')||s.includes('\n'))?`"${s.replace(/"/g,'""')}"`:s};
+const notif=(msg,type='success')=>{const n=document.createElement('div');n.style.cssText='position:fixed;top:15px;right:15px;background:'+(type==='warning'?'#d4a017':'#2d8b4e')+';color:#fff;padding:.6rem 1.2rem;border-radius:6px;font-weight:600;z-index:3000;animation:slideIn .3s ease-out';n.textContent=msg;document.body.appendChild(n);setTimeout(()=>n.remove(),2000)};
 
-            // ==================== STATE ====================
-            const S = {
-                method: 'jamak',
-                data: [],
-                panelCt: 10,
-                charts: [],
-                active: { row: 0, col: 0 },
-                range: null,
-                drag: !1,
-                dragStart: null,
-                editing: !1,
-                clip: null,
-                unsaved: !1,
-                qdaAttrs: ['Warna', 'Aroma', 'Rasa', 'Tekstur', 'Aftertaste'],
-                auditLog: []
-            };
-            const MP = {
-                jamak: { min: 10, rec: '10-20' },
-                triangel: { min: 24, rec: '24-30' },
-                duotrio: { min: 20, rec: '20-30' },
-                deskriptif: { min: 8, rec: '8-12 (terlatih)' }
-            };
+// ==================== STATE ====================
+const S={method:'jamak',data:[],panelCt:10,charts:[],active:{row:0,col:0},range:null,drag:!1,dragStart:null,editing:!1,clip:null,unsaved:!1,qdaAttrs:['Warna','Aroma','Rasa','Tekstur','Aftertaste'],auditLog:[]};
+const MP={jamak:{min:10,rec:'10-20'},triangel:{min:24,rec:'24-30'},duotrio:{min:20,rec:'20-30'},deskriptif:{min:8,rec:'8-12 (terlatih)'}};
 
-            // ==================== STATISTIK ====================
-            function calcMean(vals) {
-                const vv = vals.filter(v => v !== undefined && v !== null && !isNaN(v) && v !== 'missing');
-                return vv.length > 0 ? vv.reduce((a, b) => a + b, 0) / vv.length : NaN
+// ==================== STATISTIK ====================
+function calcMean(vals){const vv=vals.filter(v=>v!==undefined&&v!==null&&!isNaN(v)&&v!=='missing');return vv.length>0?vv.reduce((a,b)=>a+b,0)/vv.length:NaN}
+function calcSD(vals){const vv=vals.filter(v=>v!==undefined&&v!==null&&!isNaN(v)&&v!=='missing');if(vv.length<2)return NaN;const m=calcMean(vv);if(isNaN(m))return NaN;return Math.sqrt(vv.reduce((a,b)=>a+Math.pow(b-m,2),0)/(vv.length-1))}
+
+// ==================== VALIDASI SKALA ====================
+function validateScale(value,scaleType){const num=parseFloat(value);if(isNaN(num))return{ok:!1,msg:'Nilai numerik diperlukan'};if(scaleType===15)return(num>=0&&num<=15)?{ok:!0,value:num}:{ok:!1,msg:'Nilai 0.0–15.0 cm'};const minVal=1;if(Number.isInteger(num)&&num>=minVal&&num<=scaleType)return{ok:!0,value:num};return{ok:!1,msg:`Nilai integer ${minVal}–${scaleType} (ISO 6658:2017)`}}
+function getScaleMax(){return parseInt(document.getElementById('varScale')?.value||9)}
+function getScaleMin(){return getScaleMax()===15?0:1}
+function getStandard(m){const s={jamak:'ISO 5495:2005',triangel:'ISO 4120:2004',duotrio:'ISO 10399:2017',deskriptif:'ISO 13299:2016'};return s[m]||'ISO 6658:2017'}
+
+// ==================== INTERPOLASI F-TABLE ====================
+const F005={1:{1:161.45,2:18.51,3:10.13,4:7.71,5:6.61,6:5.99,7:5.59,8:5.32,9:5.12,10:4.96,12:4.75,15:4.54,20:4.35,30:4.17,40:4.08,60:4,120:3.92,1e3:3.85},2:{1:199.5,2:19,3:9.55,4:6.94,5:5.79,6:5.14,7:4.74,8:4.46,9:4.26,10:4.1,12:3.89,15:3.68,20:3.49,30:3.32,40:3.23,60:3.15,120:3.07,1e3:3},3:{1:215.71,2:19.16,3:9.28,4:6.59,5:5.41,6:4.76,7:4.35,8:4.07,9:3.86,10:3.71,12:3.49,15:3.29,20:3.1,30:2.92,40:2.84,60:2.76,120:2.68,1e3:2.61},4:{1:224.58,2:19.25,3:9.12,4:6.39,5:5.19,6:4.53,7:4.12,8:3.84,9:3.63,10:3.48,12:3.26,15:3.06,20:2.87,30:2.69,40:2.61,60:2.53,120:2.45,1e3:2.38},5:{1:230.16,2:19.3,3:9.01,4:6.26,5:5.05,6:4.39,7:3.97,8:3.69,9:3.48,10:3.33,12:3.11,15:2.9,20:2.71,30:2.53,40:2.45,60:2.37,120:2.29,1e3:2.22},6:{1:233.99,2:19.33,3:8.94,4:6.16,5:4.95,6:4.28,7:3.87,8:3.58,9:3.37,10:3.22,12:3,15:2.79,20:2.6,30:2.42,40:2.34,60:2.25,120:2.18,1e3:2.11},7:{1:236.77,2:19.35,3:8.89,4:6.09,5:4.88,6:4.21,7:3.79,8:3.5,9:3.29,10:3.14,12:2.91,15:2.71,20:2.51,30:2.33,40:2.25,60:2.17,120:2.09,1e3:2.02},8:{1:238.88,2:19.37,3:8.85,4:6.04,5:4.82,6:4.15,7:3.73,8:3.44,9:3.23,10:3.07,12:2.85,15:2.64,20:2.45,30:2.27,40:2.18,60:2.1,120:2.02,1e3:1.95},9:{1:240.54,2:19.38,3:8.81,4:6,5:4.77,6:4.1,7:3.68,8:3.39,9:3.18,10:3.02,12:2.8,15:2.59,20:2.39,30:2.21,40:2.12,60:2.04,120:1.96,1e3:1.89},10:{1:241.88,2:19.4,3:8.79,4:5.96,5:4.74,6:4.06,7:3.64,8:3.35,9:3.14,10:2.98,12:2.75,15:2.54,20:2.35,30:2.16,40:2.08,60:1.99,120:1.91,1e3:1.84}};
+const F001={1:{1:4052.18,2:98.5,3:34.12,4:21.2,5:16.26,6:13.75,7:12.25,8:11.26,9:10.56,10:10.04,12:9.33,15:8.68,20:8.1,30:7.56,60:7.08,120:6.85,1e3:6.66},2:{1:4999.5,2:99,3:30.82,4:18,5:13.27,6:10.92,7:9.55,8:8.65,9:8.02,10:7.56,12:6.93,15:6.36,20:5.85,30:5.39,60:4.98,120:4.79,1e3:4.63},3:{1:5403.35,2:99.17,3:29.46,4:16.69,5:12.06,6:9.78,7:8.45,8:7.59,9:6.99,10:6.55,12:5.95,15:5.42,20:4.94,30:4.51,60:4.13,120:3.95,1e3:3.8},4:{1:5624.58,2:99.25,3:28.71,4:15.98,5:11.39,6:9.15,7:7.85,8:7.01,9:6.42,10:5.99,12:5.41,15:4.89,20:4.43,30:4.02,60:3.65,120:3.48,1e3:3.34},5:{1:5763.65,2:99.3,3:28.24,4:15.52,5:10.97,6:8.75,7:7.46,8:6.63,9:6.06,10:5.64,12:5.06,15:4.56,20:4.1,30:3.7,60:3.34,120:3.17,1e3:3.04},6:{1:5858.99,2:99.33,3:27.91,4:15.21,5:10.67,6:8.47,7:7.19,8:6.37,9:5.8,10:5.39,12:4.82,15:4.32,20:3.87,30:3.47,60:3.12,120:2.96,1e3:2.82},7:{1:5928.36,2:99.36,3:27.67,4:14.98,5:10.46,6:8.26,7:6.99,8:6.18,9:5.61,10:5.2,12:4.64,15:4.14,20:3.7,30:3.3,60:2.95,120:2.79,1e3:2.66},8:{1:5981.07,2:99.37,3:27.49,4:14.8,5:10.29,6:8.1,7:6.84,8:6.03,9:5.47,10:5.06,12:4.5,15:4,20:3.56,30:3.17,60:2.82,120:2.66,1e3:2.53},9:{1:6022.47,2:99.39,3:27.35,4:14.66,5:10.16,6:7.98,7:6.72,8:5.91,9:5.35,10:4.94,12:4.39,15:3.89,20:3.46,30:3.07,60:2.72,120:2.56,1e3:2.43},10:{1:6055.85,2:99.4,3:27.23,4:14.55,5:10.05,6:7.87,7:6.62,8:5.81,9:5.26,10:4.85,12:4.3,15:3.8,20:3.37,30:2.98,60:2.63,120:2.47,1e3:2.34}};
+function getFCrit(df1,df2,alpha){const t=alpha===0.01?F001:F005;const adf1=Object.keys(t).map(Number).sort((a,b)=>a-b);const adf2=Object.keys(t[adf1[0]]).map(Number).sort((a,b)=>a-b);let lo1=adf1[0],hi1=adf1[adf1.length-1];for(let i=0;i<adf1.length-1;i++){if(adf1[i]<=df1&&adf1[i+1]>=df1){lo1=adf1[i];hi1=adf1[i+1];break}if(adf1[i]<=df1)lo1=adf1[i]}if(df1>=hi1){lo1=hi1;hi1=hi1}let lo2=adf2[0],hi2=adf2[adf2.length-1];for(let i=0;i<adf2.length-1;i++){if(adf2[i]<=df2&&adf2[i+1]>=df2){lo2=adf2[i];hi2=adf2[i+1];break}if(adf2[i]<=df2)lo2=adf2[i]}if(df2>=hi2){lo2=hi2;hi2=hi2}if(lo1===hi1&&lo2===hi2)return t[lo1]?.[lo2]||3;const f11=t[lo1]?.[lo2]||3,f12=t[lo1]?.[hi2]||f11,f21=t[hi1]?.[lo2]||f11,f22=t[hi1]?.[hi2]||f11;if(lo1===hi1)return f11+(f12-f11)*(df2-lo2)/(hi2-lo2||1);if(lo2===hi2)return f11+(f21-f11)*(df1-lo1)/(hi1-lo1||1);const fr1=f11+(f21-f11)*(df1-lo1)/(hi1-lo1||1),fr2=f12+(f22-f12)*(df1-lo1)/(hi1-lo1||1);return fr1+(fr2-fr1)*(df2-lo2)/(hi2-lo2||1)}
+
+// ==================== P-VALUE & TUKEY ====================
+function normCDF(x){const a1=.254829592,a2=-.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911;const s=x>=0?1:-1,ax=Math.abs(x)/Math.SQRT2,t=1/(1+p*ax);return.5*(1+s*(1-((((a5*t+a4)*t+a3)*t+a2)*t+a1)*t*Math.exp(-ax*ax)))}
+function fPVal(F,df1,df2){if(F<=0||!isFinite(F))return F<=0?1:0;const a=2/(9*df1),b=2/(9*df2),fc=Math.cbrt(F);const num=fc*(1-b)-(1-a),den=Math.sqrt(a+Math.pow(F,2/3)*b);if(den<1e-15)return num>0?0:1;return 1-normCDF(num/den)}
+const Q005={1:{2:17.97,3:26.98,4:32.82,5:37.08,6:40.41,7:43.12,8:45.4,9:47.36,10:49.07},5:{2:3.64,3:4.6,4:5.22,5:5.67,6:6.03,7:6.33,8:6.58,9:6.8,10:6.99},10:{2:3.15,3:3.88,4:4.33,5:4.65,6:4.91,7:5.12,8:5.3,9:5.46,10:5.6},15:{2:3.01,3:3.67,4:4.08,5:4.37,6:4.59,7:4.78,8:4.94,9:5.08,10:5.2},20:{2:2.95,3:3.58,4:3.96,5:4.23,6:4.45,7:4.62,8:4.77,9:4.9,10:5.01},30:{2:2.89,3:3.49,4:3.85,5:4.1,6:4.3,7:4.46,8:4.6,9:4.72,10:4.82},60:{2:2.83,3:3.4,4:3.74,5:3.98,6:4.16,7:4.31,8:4.44,9:4.55,10:4.65},120:{2:2.8,3:3.36,4:3.68,5:3.92,6:4.1,7:4.24,8:4.36,9:4.47,10:4.56}};
+const Q001={1:{2:90.03,3:134.9,4:164.1,5:185.4,6:202.1,7:215.6,8:227,9:236.8,10:245.4},5:{2:5.7,3:7.1,4:7.95,5:8.56,6:9.02,7:9.39,8:9.7,9:9.97,10:10.21},10:{2:4.82,3:5.87,4:6.5,5:6.94,6:7.27,7:7.54,8:7.76,9:7.95,10:8.11},20:{2:4.23,3:5.06,4:5.55,5:5.89,6:6.13,7:6.33,8:6.49,9:6.62,10:6.73},60:{2:3.76,3:4.43,4:4.82,5:5.08,6:5.27,7:5.42,8:5.54,9:5.64,10:5.72},120:{2:3.62,3:4.24,4:4.6,5:4.84,6:5.01,7:5.15,8:5.26,9:5.35,10:5.43}};
+function getQCrit(k,dfE,alpha){const t=alpha<=0.01?Q001:Q005;let kc=Math.min(Math.max(Math.round(k),2),10);const adf=Object.keys(t).map(Number).sort((a,b)=>a-b);let dc=adf[0];for(const d of adf){if(dfE>=d)dc=d;else break}const qv=t[dc]?.[kc];if(qv)return qv;const lo=t[adf[0]]?.[kc]||3,hi=t[adf[adf.length-1]]?.[kc]||lo;return lo+(hi-lo)*(dfE-adf[0])/(adf[adf.length-1]-adf[0]||1)}
+
+// ==================== BINOMIAL & COCHRAN'S Q ====================
+function lnGamma(z){if(z<0.5)return Math.log(Math.PI/Math.sin(Math.PI*z))-lnGamma(1-z);const g=7,c=[.9999999999998099,676.5203681218851,-1259.1392167224028,771.3234287776531,-176.6150291621406,12.507343278686905,-.13857109526572012,9.984369578019572e-6,1.5056327351493116e-7];z-=1;let x=c[0];for(let i=1;i<g+2;i++)x+=c[i]/(z+i);return.5*Math.log(2*Math.PI)+(z+.5)*Math.log(z+g+.5)-(z+g+.5)+Math.log(x)}
+const lnFact=n=>n<=1?0:lnGamma(n+1);
+function binomProb(n,k,p){if(k<0||k>n)return 0;if(p<=0||p>=1)return(k===n&&p>=1)||(k===0&&p<=0)?1:0;return Math.exp(lnFact(n)-lnFact(k)-lnFact(n-k)+k*Math.log(p)+(n-k)*Math.log(1-p))}
+function binomPVal(n,k,p){let pv=0;for(let x=k;x<=n;x++)pv+=binomProb(n,x,p);return Math.min(pv,1)}
+function cochranQ(data){const n=data[0].length,k=data.length;const colSums=data[0].map((_,j)=>data.reduce((s,row)=>s+(row[j]||0),0));const hasVar=colSums.some(cs=>cs>0&&cs<k);if(!hasVar)return{Q:NaN,note:'Data degenerate: tidak ada variasi antar panelis'};let sumXj=0,sumXj2=0;for(let j=0;j<n;j++){let cs=0;for(let i=0;i<k;i++)cs+=data[i][j]||0;sumXj+=cs;sumXj2+=cs*cs}let sumXi2=0;for(let i=0;i<k;i++){let rs=0;for(let j=0;j<n;j++)rs+=data[i][j]||0;sumXi2+=rs*rs}const denom=k*sumXj-sumXi2;if(Math.abs(denom)<1e-15)return{Q:NaN,note:'Data degenerate: denominator nol'};const Q=(k-1)*(k*sumXj2-Math.pow(sumXj,2))/denom;return{Q:isFinite(Q)?Q:NaN,note:null}}
+
+// ==================== ANOVA (dfE CORRECTED) ====================
+function calcEffectiveDF(samples,nS,nP){let validCells=0;for(const s of samples)validCells+=s.values.filter(v=>v!=='missing'&&!isNaN(v)).length;return Math.max(1,validCells-nS-nP+1)}
+function twoWayANOVA(samples){const validS=samples.filter(s=>s.values.some(v=>v!=='missing'&&!isNaN(v)));if(validS.length<2)return null;const nS=validS.length,nP=validS[0].values.length;const all=validS.map(s=>s.values).flat().filter(v=>v!=='missing'&&!isNaN(v));if(all.length<3)return null;const gM=all.reduce((a,b)=>a+b,0)/all.length;let ssT=0;all.forEach(v=>ssT+=Math.pow(v-gM,2));let ssS=0;validS.forEach(s=>{const m=calcMean(s.values);if(!isNaN(m))ssS+=nP*Math.pow(m-gM,2)});let ssP=0;for(let j=0;j<nP;j++){let ps=0,c=0;for(let i=0;i<nS;i++){const v=validS[i].values[j];if(v!=='missing'&&!isNaN(v)){ps+=v;c++}}if(c>0)ssP+=c*Math.pow(ps/c-gM,2)}const ssE=Math.max(0,ssT-ssS-ssP);const dfS=nS-1,dfP=nP-1,dfE=calcEffectiveDF(validS,nS,nP);const msS=ssS/dfS,msP=ssP/dfP,msE=ssE/dfE;return{ssS,ssP,ssE,ssT,dfS,dfP,dfE,msS,msP,msE,fS:msE>0?msS/msE:0,fP:msE>0?msP/msE:0,gM}}
+function tukeyHSD(samples,msE,dfE,alpha){const validS=samples.filter(s=>s.values.some(v=>v!=='missing'&&!isNaN(v)));if(validS.length<2)return{comps:[],hsd:0,q:0};const n=validS[0].values.length,q=getQCrit(validS.length,dfE,alpha),hsd=q*Math.sqrt(Math.max(0,msE)/n);const comps=[],means=validS.map(s=>calcMean(s.values));for(let i=0;i<validS.length;i++)for(let j=i+1;j<validS.length;j++){if(isNaN(means[i])||isNaN(means[j]))continue;const d=means[i]-means[j],ad=Math.abs(d);comps.push({s1:validS[i].code,s2:validS[j].code,diff:d,abs:ad,hsd,sig:ad>hsd,lo:d-hsd,hi:d+hsd})}return{comps,hsd,q}}
+
+// ==================== GRID ====================
+function renderGrid(){const hdr=document.getElementById('gridHeader'),bdy=document.getElementById('gridBody');const isBin=S.method==='triangel'||S.method==='duotrio',isQDA=S.method==='deskriptif';let hh='<tr><th class="corner-header"></th><th class="col-header">Kode</th>';if(isBin){hh+='<th class="col-header">Sesi</th>';for(let i=1;i<=S.panelCt;i++)hh+=`<th class="col-header">P${i}</th>`;hh+='<th class="col-header">Benar</th><th class="col-header">%</th><th class="col-header">P-val</th>'}else if(isQDA){hh+='<th class="col-header">Nama</th>';const attrs=getQDAttrs();for(let i=0;i<attrs.length;i++)hh+=`<th class="col-header">${sanitizeHTML(attrs[i])}</th>`;hh+='<th class="col-header">Mean</th><th class="col-header">SD</th>'}else{hh+='<th class="col-header">Nama</th>';for(let i=1;i<=S.panelCt;i++)hh+=`<th class="col-header">P${i}</th>`;hh+='<th class="col-header">Mean</th><th class="col-header">SD</th><th class="col-header">Min</th><th class="col-header">Max</th>'}hh+='</tr>';hdr.innerHTML=hh;let bh='';S.data.forEach((s,ri)=>{bh+='<tr>';bh+=`<th class="row-header">${ri+1}</th>`;bh+=`<td data-row="${ri}" data-col="0" data-edit="1"><span class="cell-content">${sanitizeHTML(String(s.code))}</span></td>`;bh+=`<td data-row="${ri}" data-col="1" data-edit="1"><span class="cell-content">${sanitizeHTML(String(s.name))}</span></td>`;const dc=isQDA?s.values.length:S.panelCt;for(let i=0;i<dc;i++){const v=s.values[i],isM=v==='missing';bh+=`<td data-row="${ri}" data-col="${i+2}" data-edit="1" class="${isM?'missing-cell':''}"><span class="cell-content">${isM?'NA':sanitizeHTML(String(v??''))}</span></td>`}if(isBin){const tb=s.values.filter(v=>v===1).length,pb=((tb/S.panelCt)*100).toFixed(1),p=S.method==='triangel'?1/3:1/2,pv=binomPVal(S.panelCt,tb,p);bh+=`<td style="font-weight:600;background:#f0f4ff"><span>${tb}/${S.panelCt}</span></td><td style="font-weight:600;background:#f0f4ff"><span>${pb}%</span></td><td style="font-weight:600;background:${pv<=0.05?'#d4edda':'#fff3cd'}"><span>${pv.toFixed(4)}</span></td>`}else if(isQDA){const mn=calcMean(s.values),sd=calcSD(s.values);bh+=`<td style="font-weight:600;background:#f0f4ff"><span>${isNaN(mn)?'NA':mn.toFixed(2)}</span></td><td style="font-weight:600;background:#f0f4ff"><span>${isNaN(sd)?'NA':sd.toFixed(2)}</span></td>`}else{const mn=calcMean(s.values),sd=calcSD(s.values),vals=s.values.filter(v=>v!=='missing'&&!isNaN(v)),mnv=vals.length>0?Math.min(...vals):NaN,mx=vals.length>0?Math.max(...vals):NaN;bh+=`<td style="font-weight:600;background:#f0f4ff"><span>${isNaN(mn)?'NA':mn.toFixed(2)}</span></td><td style="font-weight:600;background:#f0f4ff"><span>${isNaN(sd)?'NA':sd.toFixed(2)}</span></td><td style="font-weight:600;background:#f0f4ff"><span>${isNaN(mnv)?'NA':mnv}</span></td><td style="font-weight:600;background:#f0f4ff"><span>${isNaN(mx)?'NA':mx}</span></td>`}bh+='</tr>'});bdy.innerHTML=bh;refreshSelection();updateMissingIndicator()}
+function getQDAttrs(){if(S.data.length>0&&S.data[0].values.length<=S.qdaAttrs.length)return S.qdaAttrs.slice(0,S.data[0].values.length);return S.qdaAttrs.slice(0,S.panelCt)}
+function updateMissingIndicator(){const mi=document.getElementById('missingIndicator');if(!mi)return;let total=0,missing=0;S.data.forEach(s=>s.values.forEach(v=>{total++;if(v==='missing')missing++}));if(missing>0){mi.style.display='inline';mi.textContent=`⚠️ Missing: ${((missing/total)*100).toFixed(1)}%`}else mi.style.display='none'}
+
+// ==================== EVENTS ====================
+function setupEvents(){const grid=document.getElementById('excelGrid');if(grid._evtSetup)return;grid._evtSetup=!0;grid.addEventListener('mousedown',function(e){const td=e.target.closest('td');if(!td)return;if(S.editing)finishEdit();const r=parseInt(td.dataset.row),c=parseInt(td.dataset.col);if(isNaN(r)||isNaN(c))return;S.drag=!0;S.dragStart={row:r,col:c};setActive(r,c);setRange(r,c,r,c);e.preventDefault()});grid.addEventListener('mousemove',function(e){if(!S.drag)return;const td=e.target.closest('td');if(!td)return;const r=parseInt(td.dataset.row),c=parseInt(td.dataset.col);if(isNaN(r)||isNaN(c))return;setRange(Math.min(S.dragStart.row,r),Math.max(S.dragStart.row,r),Math.min(S.dragStart.col,c),Math.max(S.dragStart.col,c));refreshSelection();updateStatus()});grid.addEventListener('dblclick',function(e){const td=e.target.closest('td');if(!td||td.dataset.edit==='0')return;const r=parseInt(td.dataset.row),c=parseInt(td.dataset.col);if(isNaN(r)||isNaN(c))return;startEdit(td,r,c)})}
+function setActive(r,c){S.active={row:r,col:c};const cn=['Kode','Nama'];if(S.method==='deskriptif'){getQDAttrs().forEach(a=>cn.push(a));cn.push('Mean','SD')}else if(S.method==='triangel'||S.method==='duotrio'){for(let i=1;i<=S.panelCt;i++)cn.push(`P${i}`);cn.push('Total','%','P-val')}else{for(let i=1;i<=S.panelCt;i++)cn.push(`P${i}`);cn.push('Mean','SD','Min','Max')}document.getElementById('cellRef').textContent=`${cn[c]||'?'}${r+1}`;const td=document.querySelector(`td[data-row="${r}"][data-col="${c}"]`),fi=document.getElementById('formulaInput');if(td&&fi&&!S.editing)fi.value=td.querySelector('.cell-content')?.textContent||''}
+function setRange(mnR,mxR,mnC,mxC){S.range={minRow:mnR,maxRow:mxR,minCol:mnC,maxCol:mxC}}
+function refreshSelection(){document.querySelectorAll('#excelGrid td').forEach(t=>t.classList.remove('active-cell','selected-cell'));const at=document.querySelector(`td[data-row="${S.active.row}"][data-col="${S.active.col}"]`);if(at)at.classList.add('active-cell');if(S.range)for(let r=S.range.minRow;r<=S.range.maxRow;r++)for(let c=S.range.minCol;c<=S.range.maxCol;c++){const td=document.querySelector(`td[data-row="${r}"][data-col="${c}"]`);if(td&&!(r===S.active.row&&c===S.active.col))td.classList.add('selected-cell')}}
+function getRange(){return S.range||{minRow:S.active.row,maxRow:S.active.row,minCol:S.active.col,maxCol:S.active.col}}
+
+// ==================== EDITING ====================
+function startEdit(td,r,c){if(S.editing)finishEdit();if(td.dataset.edit==='0')return;S.editing=!0;td.classList.add('editing');const cv=td.querySelector('.cell-content')?.textContent||'',inp=document.createElement('input');inp.type='text';inp.className='cell-editor';inp.value=cv==='NA'?'':cv;td.innerHTML='';td.appendChild(inp);inp.focus();inp.select();inp.addEventListener('blur',()=>finishEdit());inp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();finishEdit();navigate('down')}else if(e.key==='Tab'){e.preventDefault();finishEdit();navigate(e.shiftKey?'left':'right')}else if(e.key==='Escape'){e.preventDefault();inp.value=cv;finishEdit()}})}
+function finishEdit(){if(!S.editing)return;const et=document.querySelector('td.editing');if(!et){S.editing=!1;return}const inp=et.querySelector('input.cell-editor'),nv=inp?inp.value:'';const r=parseInt(et.dataset.row),c=parseInt(et.dataset.col);if(!isNaN(r)&&!isNaN(c)){if(nv.trim()===''||nv.toLowerCase()==='na'){updateDirect(r,c,'missing');et.classList.remove('editing');et.classList.add('missing-cell');et.innerHTML='<span class="cell-content">NA</span>';S.editing=!1;renderGrid();return}if(!updateModel(r,c,nv)){const ov=getOrig(r,c);et.classList.remove('editing');et.innerHTML=`<span class="cell-content">${sanitizeHTML(String(ov))}</span>`;S.editing=!1;refreshSelection();return}}et.classList.remove('editing');et.innerHTML=`<span class="cell-content">${sanitizeHTML(nv)}</span>`;S.editing=!1;S.unsaved=!0;S.auditLog.push({ts:new Date().toISOString(),action:'edit',row:r,col:c,newVal:nv});renderGrid();refreshSelection()}
+function getOrig(r,c){if(c===0)return S.data[r]?.code||'';if(c===1)return S.data[r]?.name||'';const md=S.method==='deskriptif'?S.data[r]?.values.length:S.panelCt;if(c>=2&&c<md+2)return S.data[r]?.values[c-2]??'';return''}
+function updateModel(r,c,value){if(c===0){S.data[r].code=value;return!0}if(c===1){S.data[r].name=value;return!0}const md=S.method==='deskriptif'?S.data[r].values.length:S.panelCt;if(c>=2&&c<md+2){if(S.method==='triangel'||S.method==='duotrio'){const nv=parseFloat(value);if(isNaN(nv)||(nv!==0&&nv!==1)){notif('0 atau 1','warning');return!1}S.data[r].values[c-2]=nv;return!0}else{const sc=getScaleMax();const v=validateScale(value,sc);if(!v.ok){notif(v.msg,'warning');return!1}S.data[r].values[c-2]=v.value;return!0}}return!1}
+function updateDirect(r,c,value){if(c===0)S.data[r].code='';else if(c===1)S.data[r].name='';else{const di=c-2;if(di<S.data[r].values.length)S.data[r].values[di]=value}}
+function navigate(dir){if(S.data.length===0){notif('Tidak ada data','warning');return}let nr=S.active.row,nc=S.active.col,mc;if(S.method==='triangel'||S.method==='duotrio')mc=S.panelCt+4;else if(S.method==='deskriptif')mc=(S.data[0]?.values.length||0)+3;else mc=S.panelCt+5;switch(dir){case'up':nr=Math.max(0,nr-1);break;case'down':nr=Math.min(S.data.length-1,nr+1);break;case'left':nc=Math.max(0,nc-1);break;case'right':nc=Math.min(mc,nc+1);break}setActive(nr,nc);setRange(nr,nc,nr,nc);refreshSelection();updateStatus()}
+
+// ==================== OPS ====================
+function toggleMissing(){const range=getRange();for(let r=range.minRow;r<=range.maxRow;r++)for(let c=range.minCol;c<=range.maxCol;c++){const td=document.querySelector(`td[data-row="${r}"][data-col="${c}"]`);if(td&&td.dataset.edit==='1'&&c>=2){const di=c-2,cur=S.data[r].values[di];S.data[r].values[di]=cur==='missing'?0:'missing'}}renderGrid();notif('⚠️ Toggle missing')}
+function copySelection(){const range=getRange();S.clip=[];for(let r=range.minRow;r<=range.maxRow;r++){const rd=[];for(let c=range.minCol;c<=range.maxCol;c++){const td=document.querySelector(`td[data-row="${r}"][data-col="${c}"]`);rd.push(td?(td.querySelector('.cell-content')?.textContent||''):'')}S.clip.push(rd)}notif('📋 Dicopy')}
+function pasteSelection(){if(!S.clip){notif('Tidak ada data','warning');return}const sr=S.active.row,sc=S.active.col;for(let r=0;r<S.clip.length;r++){const tr=sr+r;if(tr>=S.data.length)break;for(let c=0;c<S.clip[r].length;c++){const tc=sc+c,td=document.querySelector(`td[data-row="${tr}"][data-col="${tc}"]`);if(td&&td.dataset.edit==='1')updateModel(tr,tc,S.clip[r][c])}}renderGrid();notif('📥 Dipaste')}
+function clearSelectedCells(){const range=getRange();const dv=(S.method==='triangel'||S.method==='duotrio')?0:'missing';for(let r=range.minRow;r<=range.maxRow;r++)for(let c=range.minCol;c<=range.maxCol;c++){const td=document.querySelector(`td[data-row="${r}"][data-col="${c}"]`);if(td&&td.dataset.edit==='1')updateDirect(r,c,dv)}renderGrid();notif('🗑️ Cleared')}
+function insertRow(){const row=S.active.row;const nc=S.data.length<26?String.fromCharCode(65+S.data.length):`S${S.data.length+1}`;let dn;if(S.method==='triangel'||S.method==='duotrio')dn=`Sesi ${S.data.length+1}`;else dn=`Sampel ${nc}`;const vals=Array(S.method==='deskriptif'?S.qdaAttrs.length:S.panelCt).fill(0);S.data.splice(row,0,{code:nc,name:dn,values:vals});renderGrid();setActive(row,0);setRange(row,0,row,0);notif('➕ Row')}
+function deleteRow(){if(S.data.length<=1){notif('Min 1 baris','warning');return}const row=S.active.row;S.data.splice(row,1);if(S.active.row>=S.data.length)S.active.row=S.data.length-1;renderGrid();notif('➖ Row')}
+
+// ==================== METHOD SWITCHING ====================
+function switchMethod(method){if(S.unsaved&&method!==S.method){if(!confirm(`Ganti ke ${getMethodName(method)}?`)){document.getElementById('varMethod').value=S.method;return}}S.method=method;updateToolbarBtns();const mp=MP[method]||{min:10},pi=document.getElementById('varPanelists');pi.min=mp.min;document.getElementById('minPanelistNote').textContent=`Min: ${mp.min} (rek: ${mp.rec})`;if(method==='deskriptif'){S.qdaAttrs=document.getElementById('qdaAttributes')?.value.split(',').map(a=>a.trim()).filter(a=>a)||['Warna','Aroma','Rasa','Tekstur','Aftertaste'];S.panelCt=S.qdaAttrs.length;pi.value=S.panelCt;document.getElementById('qdaAttributesGroup').style.display='flex';document.getElementById('trainedPanelGroup').style.display='flex';document.getElementById('scaleGroup').style.display='flex'}else{if(S.panelCt<mp.min){S.panelCt=mp.min;pi.value=mp.min}document.getElementById('qdaAttributesGroup').style.display='none';document.getElementById('trainedPanelGroup').style.display='none';document.getElementById('scaleGroup').style.display=(method==='triangel'||method==='duotrio')?'none':'flex'}initData();renderGrid();updateStatus();document.getElementById('varMethod').value=method;updateMethodologyNote();showWarnings()}
+function updateToolbarBtns(){['jamak','triangel','duotrio','deskriptif'].forEach(m=>{const b=document.getElementById(`btn-${m}`);if(b)b.className=m===S.method?'active':''})}
+function showWarnings(){const wb=document.getElementById('warningBar');if(S.method==='triangel'&&S.panelCt<24){wb.style.display='block';wb.textContent='⚠️ ISO 4120:2004 merekomendasikan 24-30 panelis'}else if(S.method==='duotrio'&&S.panelCt<20){wb.style.display='block';wb.textContent='⚠️ ISO 10399:2017 merekomendasikan ≥20 panelis'}else wb.style.display='none'}
+function updateMethodologyNote(){const mn=document.getElementById('methodologyNote'),notes={jamak:'📋 ISO 5495:2005 — Two-way ANOVA (panelis=blok). dfE disesuaikan untuk missing data.',triangel:'🔺 ISO 4120:2004 — Binomial (p0=1/3).',duotrio:'👥 ISO 10399:2017 — Binomial (p0=1/2).',deskriptif:'📝 ISO 13299:2016 — Statistik deskriptif per atribut. ANOVA per atribut membutuhkan skor individual per panelis.'};if(mn)mn.textContent=notes[S.method]||''}
+function initData(){if(S.method==='triangel')S.data=[{code:'S1',name:'Sesi 1',values:Array(S.panelCt).fill(0).map(()=>Math.round(Math.random()))}];else if(S.method==='duotrio')S.data=[{code:'S1',name:'Sesi 1',values:Array(S.panelCt).fill(0).map(()=>Math.round(Math.random()))}];else if(S.method==='deskriptif'){const ac=Math.min(S.qdaAttrs.length,S.panelCt);S.data=[{code:'A',name:'Sampel A',values:Array(ac).fill(0).map(()=>Math.floor(Math.random()*5)+4)},{code:'B',name:'Sampel B',values:Array(ac).fill(0).map(()=>Math.floor(Math.random()*5)+3)},{code:'C',name:'Sampel C',values:Array(ac).fill(0).map(()=>Math.floor(Math.random()*5)+5)}]}else S.data=[{code:'A',name:'Sampel A',values:[7,8,6,7,8,7,6,7,8,7]},{code:'B',name:'Sampel B',values:[5,6,5,4,6,5,4,5,6,5]},{code:'C',name:'Sampel C',values:[8,7,8,9,7,8,9,8,7,8]}];S.unsaved=!1;S.active={row:0,col:0};S.range={minRow:0,maxRow:0,minCol:0,maxCol:0}}
+function getMethodName(m){const n={jamak:'Perbandingan Jamak',triangel:'Triangel',duotrio:'Duo-Trio',deskriptif:'Deskriptif QDA'};return n[m]||m}
+
+// ==================== RANDOM CODES ====================
+function generateRandomCodes(){const codes=new Set();S.data.forEach(s=>{let c;do{c=Math.floor(Math.random()*900)+100}while(codes.has(c));codes.add(c);s.code=String(c)});renderGrid();notif('🎲 Kode 3-digit acak')}
+
+// ==================== CSV WITH METADATA ====================
+function exportCSV(){const alpha=parseFloat(document.getElementById('varAlpha')?.value||0.05);let csv='';csv+=`# Uji-Organoleptik v2.0 Output\n`;csv+=`# Method: ${getMethodName(S.method)}\n`;csv+=`# Alpha: ${alpha}\n`;csv+=`# Scale: ${getScaleMax()}-point (min=${getScaleMin()})\n`;csv+=`# N: ${S.method==='deskriptif'?(S.data[0]?.values.length||0):S.panelCt}\n`;csv+=`# Generated: ${new Date().toISOString()}\n`;csv+=`# Missing values: 'NA'\n#\n`;const isBin=S.method==='triangel'||S.method==='duotrio',isQDA=S.method==='deskriptif';if(isBin){csv+='Session,Panelist,Response\n';S.data.forEach(s=>{s.values.forEach((v,i)=>{csv+=`${escapeCSV(s.code)},P${i+1},${v==='missing'?'NA':v}\n`})})}else if(isQDA){csv+='Sample,'+getQDAttrs().map(escapeCSV).join(',')+'\n';S.data.forEach(s=>{csv+=escapeCSV(s.code)+','+s.values.map(v=>v==='missing'?'NA':v).join(',')+'\n'})}else{csv+='Sample,'+Array.from({length:S.panelCt},(_,i)=>`P${i+1}`).join(',')+'\n';S.data.forEach(s=>{csv+=escapeCSV(s.code)+','+s.values.map(v=>v==='missing'?'NA':v).join(',')+'\n'})}const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`sensori-${new Date().toISOString().slice(0,10)}.csv`;a.click()}
+
+// ==================== KESIMPULAN CEPAT BOX ====================
+function updateConclusionBox(alpha){
+    const box=document.getElementById('conclusionBox'),content=document.getElementById('conclusionContent');
+    if(!box||!content)return;
+    box.style.display='block';
+    let html='';
+    if(S.method==='triangel'||S.method==='duotrio'){
+        const prob=S.method==='triangel'?1/3:1/2;
+        const tc=S.data.reduce((sum,s)=>sum+s.values.filter(v=>v===1).length,0);
+        const tr=S.data.reduce((sum,s)=>sum+s.values.length,0);
+        const pv=binomPVal(tr,tc,prob);
+        html+=`<strong>Status:</strong> ${pv<=alpha?'✅ Panelis DAPAT membedakan':'❌ Panelis TIDAK dapat membedakan'}<br>`;
+        html+=`<strong>Benar:</strong> ${tc}/${tr} (${((tc/tr)*100).toFixed(1)}%)<br>`;
+        html+=`<strong>P-value:</strong> ${pv.toFixed(4)}<br>`;
+        html+=`<strong>Kesimpulan:</strong> ${pv<=alpha?'Perbedaan sensorik terdeteksi':'Tidak cukup bukti perbedaan'}`;
+    }else if(S.method==='deskriptif'){
+        const means=S.data.map(s=>calcMean(s.values));
+        const validMeans=means.filter(m=>!isNaN(m));
+        const maxMean=validMeans.length>0?Math.max(...validMeans):NaN;
+        const bestIdx=means.indexOf(maxMean);
+        const bestSample=bestIdx>=0?S.data[bestIdx]:null;
+        html+=`<strong>Sampel Terbaik:</strong> ${bestSample?.code||'N/A'} (${isNaN(maxMean)?'N/A':maxMean.toFixed(2)})<br>`;
+        html+=`<strong>Atribut:</strong> ${getQDAttrs().join(', ')}<br>`;
+        html+=`<strong>Catatan:</strong> Hasil deskriptif — untuk ANOVA diperlukan data per panelis`;
+    }else{
+        const an=twoWayANOVA(S.data);
+        if(an){
+            const pvS=fPVal(an.fS,an.dfS,an.dfE);
+            const fcS=getFCrit(an.dfS,an.dfE,alpha);
+            const means=S.data.map(s=>({code:s.code,mean:calcMean(s.values)})).filter(m=>!isNaN(m.mean));
+            means.sort((a,b)=>b.mean-a.mean);
+            html+=`<strong>Status:</strong> ${an.fS>fcS?'✅ Ada perbedaan signifikan':'❌ Tidak ada perbedaan signifikan'}<br>`;
+            html+=`<strong>F:</strong> ${an.fS.toFixed(2)} (p = ${pvS.toFixed(4)}, α = ${alpha})<br>`;
+            if(means.length>0){
+                html+=`<strong>Terbaik:</strong> ${means[0].code} (${means[0].mean.toFixed(2)})<br>`;
+                if(means.length>1)html+=`<strong>Terendah:</strong> ${means[means.length-1].code} (${means[means.length-1].mean.toFixed(2)})<br>`;
             }
-
-            function calcSD(vals) {
-                const vv = vals.filter(v => v !== undefined && v !== null && !isNaN(v) && v !== 'missing');
-                if (vv.length < 2) return NaN;
-                const m = calcMean(vv);
-                if (isNaN(m)) return NaN;
-                return Math.sqrt(vv.reduce((a, b) => a + Math.pow(b - m, 2), 0) / (vv.length - 1))
-            }
-
-            // ==================== VALIDASI SKALA ====================
-            function validateScale(value, scaleType) {
-                const num = parseFloat(value);
-                if (isNaN(num)) return { ok: !1, msg: 'Nilai numerik diperlukan' };
-                if (scaleType === 15) return (num >= 0 && num <= 15) ? { ok: !0, value: num } : { ok: !1,
-                    msg: 'Nilai 0.0–15.0 cm' };
-                const minVal = 1;
-                if (Number.isInteger(num) && num >= minVal && num <= scaleType) return { ok: !0, value: num };
-                return { ok: !1, msg: `Nilai integer ${minVal}–${scaleType} (ISO 6658:2017)` };
-            }
-
-            function getScaleMax() { return parseInt(document.getElementById('varScale')?.value || 9) }
-
-            function getScaleMin() { return getScaleMax() === 15 ? 0 : 1 }
-
-            // ==================== INTERPOLASI F-TABLE ====================
-            const F005 = {
-                1: { 1: 161.45, 2: 18.51, 3: 10.13, 4: 7.71, 5: 6.61, 6: 5.99, 7: 5.59, 8: 5.32, 9: 5.12,
-                    10: 4.96, 12: 4.75, 15: 4.54, 20: 4.35, 30: 4.17, 40: 4.08, 60: 4, 120: 3.92, 1e3: 3.85 },
-                2: { 1: 199.5, 2: 19, 3: 9.55, 4: 6.94, 5: 5.79, 6: 5.14, 7: 4.74, 8: 4.46, 9: 4.26, 10: 4.1,
-                    12: 3.89, 15: 3.68, 20: 3.49, 30: 3.32, 40: 3.23, 60: 3.15, 120: 3.07, 1e3: 3 },
-                3: { 1: 215.71, 2: 19.16, 3: 9.28, 4: 6.59, 5: 5.41, 6: 4.76, 7: 4.35, 8: 4.07, 9: 3.86,
-                    10: 3.71, 12: 3.49, 15: 3.29, 20: 3.1, 30: 2.92, 40: 2.84, 60: 2.76, 120: 2.68, 1e3: 2.61 },
-                4: { 1: 224.58, 2: 19.25, 3: 9.12, 4: 6.39, 5: 5.19, 6: 4.53, 7: 4.12, 8: 3.84, 9: 3.63,
-                    10: 3.48, 12: 3.26, 15: 3.06, 20: 2.87, 30: 2.69, 40: 2.61, 60: 2.53, 120: 2.45, 1e3: 2.38 },
-                5: { 1: 230.16, 2: 19.3, 3: 9.01, 4: 6.26, 5: 5.05, 6: 4.39, 7: 3.97, 8: 3.69, 9: 3.48, 10: 3.33,
-                    12: 3.11, 15: 2.9, 20: 2.71, 30: 2.53, 40: 2.45, 60: 2.37, 120: 2.29, 1e3: 2.22 },
-                6: { 1: 233.99, 2: 19.33, 3: 8.94, 4: 6.16, 5: 4.95, 6: 4.28, 7: 3.87, 8: 3.58, 9: 3.37,
-                    10: 3.22, 12: 3, 15: 2.79, 20: 2.6, 30: 2.42, 40: 2.34, 60: 2.25, 120: 2.18, 1e3: 2.11 },
-                7: { 1: 236.77, 2: 19.35, 3: 8.89, 4: 6.09, 5: 4.88, 6: 4.21, 7: 3.79, 8: 3.5, 9: 3.29, 10: 3.14,
-                    12: 2.91, 15: 2.71, 20: 2.51, 30: 2.33, 40: 2.25, 60: 2.17, 120: 2.09, 1e3: 2.02 },
-                8: { 1: 238.88, 2: 19.37, 3: 8.85, 4: 6.04, 5: 4.82, 6: 4.15, 7: 3.73, 8: 3.44, 9: 3.23,
-                    10: 3.07, 12: 2.85, 15: 2.64, 20: 2.45, 30: 2.27, 40: 2.18, 60: 2.1, 120: 2.02, 1e3: 1.95 },
-                9: { 1: 240.54, 2: 19.38, 3: 8.81, 4: 6, 5: 4.77, 6: 4.1, 7: 3.68, 8: 3.39, 9: 3.18, 10: 3.02,
-                    12: 2.8, 15: 2.59, 20: 2.39, 30: 2.21, 40: 2.12, 60: 2.04, 120: 1.96, 1e3: 1.89 },
-                10: { 1: 241.88, 2: 19.4, 3: 8.79, 4: 5.96, 5: 4.74, 6: 4.06, 7: 3.64, 8: 3.35, 9: 3.14,
-                    10: 2.98, 12: 2.75, 15: 2.54, 20: 2.35, 30: 2.16, 40: 2.08, 60: 1.99, 120: 1.91, 1e3: 1.84 }
-            };
-            const F001 = {
-                1: { 1: 4052.18, 2: 98.5, 3: 34.12, 4: 21.2, 5: 16.26, 6: 13.75, 7: 12.25, 8: 11.26, 9: 10.56,
-                    10: 10.04, 12: 9.33, 15: 8.68, 20: 8.1, 30: 7.56, 60: 7.08, 120: 6.85, 1e3: 6.66 },
-                2: { 1: 4999.5, 2: 99, 3: 30.82, 4: 18, 5: 13.27, 6: 10.92, 7: 9.55, 8: 8.65, 9: 8.02, 10: 7.56,
-                    12: 6.93, 15: 6.36, 20: 5.85, 30: 5.39, 60: 4.98, 120: 4.79, 1e3: 4.63 },
-                3: { 1: 5403.35, 2: 99.17, 3: 29.46, 4: 16.69, 5: 12.06, 6: 9.78, 7: 8.45, 8: 7.59, 9: 6.99,
-                    10: 6.55, 12: 5.95, 15: 5.42, 20: 4.94, 30: 4.51, 60: 4.13, 120: 3.95, 1e3: 3.8 },
-                4: { 1: 5624.58, 2: 99.25, 3: 28.71, 4: 15.98, 5: 11.39, 6: 9.15, 7: 7.85, 8: 7.01, 9: 6.42,
-                    10: 5.99, 12: 5.41, 15: 4.89, 20: 4.43, 30: 4.02, 60: 3.65, 120: 3.48, 1e3: 3.34 },
-                5: { 1: 5763.65, 2: 99.3, 3: 28.24, 4: 15.52, 5: 10.97, 6: 8.75, 7: 7.46, 8: 6.63, 9: 6.06,
-                    10: 5.64, 12: 5.06, 15: 4.56, 20: 4.1, 30: 3.7, 60: 3.34, 120: 3.17, 1e3: 3.04 },
-                6: { 1: 5858.99, 2: 99.33, 3: 27.91, 4: 15.21, 5: 10.67, 6: 8.47, 7: 7.19, 8: 6.37, 9: 5.8,
-                    10: 5.39, 12: 4.82, 15: 4.32, 20: 3.87, 30: 3.47, 60: 3.12, 120: 2.96, 1e3: 2.82 },
-                7: { 1: 5928.36, 2: 99.36, 3: 27.67, 4: 14.98, 5: 10.46, 6: 8.26, 7: 6.99, 8: 6.18, 9: 5.61,
-                    10: 5.2, 12: 4.64, 15: 4.14, 20: 3.7, 30: 3.3, 60: 2.95, 120: 2.79, 1e3: 2.66 },
-                8: { 1: 5981.07, 2: 99.37, 3: 27.49, 4: 14.8, 5: 10.29, 6: 8.1, 7: 6.84, 8: 6.03, 9: 5.47,
-                    10: 5.06, 12: 4.5, 15: 4, 20: 3.56, 30: 3.17, 60: 2.82, 120: 2.66, 1e3: 2.53 },
-                9: { 1: 6022.47, 2: 99.39, 3: 27.35, 4: 14.66, 5: 10.16, 6: 7.98, 7: 6.72, 8: 5.91, 9: 5.35,
-                    10: 4.94, 12: 4.39, 15: 3.89, 20: 3.46, 30: 3.07, 60: 2.72, 120: 2.56, 1e3: 2.43 },
-                10: { 1: 6055.85, 2: 99.4, 3: 27.23, 4: 14.55, 5: 10.05, 6: 7.87, 7: 6.62, 8: 5.81, 9: 5.26,
-                    10: 4.85, 12: 4.3, 15: 3.8, 20: 3.37, 30: 2.98, 60: 2.63, 120: 2.47, 1e3: 2.34 }
-            };
-
-            function getFCrit(df1, df2, alpha) {
-                const t = alpha === 0.01 ? F001 : F005;
-                const adf1 = Object.keys(t).map(Number).sort((a, b) => a - b);
-                const adf2 = Object.keys(t[adf1[0]]).map(Number).sort((a, b) => a - b);
-                let lo1 = adf1[0],
-                    hi1 = adf1[adf1.length - 1];
-                for (let i = 0; i < adf1.length - 1; i++) { if (adf1[i] <= df1 && adf1[i + 1] >= df1) { lo1 = adf1[
-                            i];
-                        hi1 = adf1[i + 1];
-                        break }
-                    if (adf1[i] <= df1) lo1 = adf1[i] }
-                if (df1 >= hi1) { lo1 = hi1;
-                    hi1 = hi1 }
-                let lo2 = adf2[0],
-                    hi2 = adf2[adf2.length - 1];
-                for (let i = 0; i < adf2.length - 1; i++) { if (adf2[i] <= df2 && adf2[i + 1] >= df2) { lo2 = adf2[
-                            i];
-                        hi2 = adf2[i + 1];
-                        break }
-                    if (adf2[i] <= df2) lo2 = adf2[i] }
-                if (df2 >= hi2) { lo2 = hi2;
-                    hi2 = hi2 }
-                if (lo1 === hi1 && lo2 === hi2) return t[lo1]?.[lo2] || 3;
-                const f11 = t[lo1]?.[lo2] || 3,
-                    f12 = t[lo1]?.[hi2] || f11,
-                    f21 = t[hi1]?.[lo2] || f11,
-                    f22 = t[hi1]?.[hi2] || f11;
-                if (lo1 === hi1) return f11 + (f12 - f11) * (df2 - lo2) / (hi2 - lo2 || 1);
-                if (lo2 === hi2) return f11 + (f21 - f11) * (df1 - lo1) / (hi1 - lo1 || 1);
-                const fr1 = f11 + (f21 - f11) * (df1 - lo1) / (hi1 - lo1 || 1),
-                    fr2 = f12 + (f22 - f12) * (df1 - lo1) / (hi1 - lo1 || 1);
-                return fr1 + (fr2 - fr1) * (df2 - lo2) / (hi2 - lo2 || 1)
-            }
-
-            // ==================== P-VALUE & TUKEY ====================
-            function normCDF(x) { const a1 = .254829592,
-                    a2 = -.284496736,
-                    a3 = 1.421413741,
-                    a4 = -1.453152027,
-                    a5 = 1.061405429,
-                    p = .3275911;
-                const s = x >= 0 ? 1 : -1,
-                    ax = Math.abs(x) / Math.SQRT2,
-                    t = 1 / (1 + p * ax);
-                return .5 * (1 + s * (1 - ((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t * Math.exp(-ax * ax))) }
-
-            function fPVal(F, df1, df2) { if (F <= 0 || !isFinite(F)) return F <= 0 ? 1 : 0;
-                const a = 2 / (9 * df1),
-                    b = 2 / (9 * df2),
-                    fc = Math.cbrt(F);
-                const num = fc * (1 - b) - (1 - a),
-                    den = Math.sqrt(a + Math.pow(F, 2 / 3) * b);
-                if (den < 1e-15) return num > 0 ? 0 : 1;
-                return 1 - normCDF(num / den) }
-            const Q005 = { 1: { 2: 17.97, 3: 26.98, 4: 32.82, 5: 37.08, 6: 40.41, 7: 43.12, 8: 45.4, 9: 47.36,
-                    10: 49.07 }, 5: { 2: 3.64, 3: 4.6, 4: 5.22, 5: 5.67, 6: 6.03, 7: 6.33, 8: 6.58, 9: 6.8,
-                    10: 6.99 }, 10: { 2: 3.15, 3: 3.88, 4: 4.33, 5: 4.65, 6: 4.91, 7: 5.12, 8: 5.3, 9: 5.46,
-                    10: 5.6 }, 15: { 2: 3.01, 3: 3.67, 4: 4.08, 5: 4.37, 6: 4.59, 7: 4.78, 8: 4.94, 9: 5.08,
-                    10: 5.2 }, 20: { 2: 2.95, 3: 3.58, 4: 3.96, 5: 4.23, 6: 4.45, 7: 4.62, 8: 4.77, 9: 4.9,
-                    10: 5.01 }, 30: { 2: 2.89, 3: 3.49, 4: 3.85, 5: 4.1, 6: 4.3, 7: 4.46, 8: 4.6, 9: 4.72,
-                    10: 4.82 }, 60: { 2: 2.83, 3: 3.4, 4: 3.74, 5: 3.98, 6: 4.16, 7: 4.31, 8: 4.44, 9: 4.55,
-                    10: 4.65 }, 120: { 2: 2.8, 3: 3.36, 4: 3.68, 5: 3.92, 6: 4.1, 7: 4.24, 8: 4.36, 9: 4.47,
-                10: 4.56 } };
-            const Q001 = { 1: { 2: 90.03, 3: 134.9, 4: 164.1, 5: 185.4, 6: 202.1, 7: 215.6, 8: 227, 9: 236.8,
-                    10: 245.4 }, 5: { 2: 5.7, 3: 7.1, 4: 7.95, 5: 8.56, 6: 9.02, 7: 9.39, 8: 9.7, 9: 9.97,
-                    10: 10.21 }, 10: { 2: 4.82, 3: 5.87, 4: 6.5, 5: 6.94, 6: 7.27, 7: 7.54, 8: 7.76, 9: 7.95,
-                    10: 8.11 }, 20: { 2: 4.23, 3: 5.06, 4: 5.55, 5: 5.89, 6: 6.13, 7: 6.33, 8: 6.49, 9: 6.62,
-                    10: 6.73 }, 60: { 2: 3.76, 3: 4.43, 4: 4.82, 5: 5.08, 6: 5.27, 7: 5.42, 8: 5.54, 9: 5.64,
-                    10: 5.72 }, 120: { 2: 3.62, 3: 4.24, 4: 4.6, 5: 4.84, 6: 5.01, 7: 5.15, 8: 5.26, 9: 5.35,
-                10: 5.43 } };
-
-            function getQCrit(k, dfE, alpha) { const t = alpha <= 0.01 ? Q001 : Q005;
-                let kc = Math.min(Math.max(Math.round(k), 2), 10);
-                const adf = Object.keys(t).map(Number).sort((a, b) => a - b);
-                let dc = adf[0];
-                for (const d of adf) { if (dfE >= d) dc = d;
-                    else break }
-                const qv = t[dc]?.[kc];
-                if (qv) return qv;
-                const lo = t[adf[0]]?.[kc] || 3,
-                    hi = t[adf[adf.length - 1]]?.[kc] || lo;
-                return lo + (hi - lo) * (dfE - adf[0]) / (adf[adf.length - 1] - adf[0] || 1) }
-
-            // ==================== BINOMIAL & COCHRAN'S Q ====================
-            function lnGamma(z) { if (z < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * z)) - lnGamma(1 - z);
-                const g = 7,
-                    c = [.9999999999998099, 676.5203681218851, -1259.1392167224028, 771.3234287776531, -
-                        176.6150291621406, 12.507343278686905, -.13857109526572012, 9.984369578019572e-6,
-                        1.5056327351493116e-7
-                    ];
-                z -= 1;
-                let x = c[0];
-                for (let i = 1; i < g + 2; i++) x += c[i] / (z + i);
-                return .5 * Math.log(2 * Math.PI) + (z + .5) * Math.log(z + g + .5) - (z + g + .5) + Math.log(x) }
-            const lnFact = n => n <= 1 ? 0 : lnGamma(n + 1);
-
-            function binomProb(n, k, p) { if (k < 0 || k > n) return 0; if (p <= 0 || p >= 1) return (k === n && p >=
-                    1) || (k === 0 && p <= 0) ? 1 : 0;
-                return Math.exp(lnFact(n) - lnFact(k) - lnFact(n - k) + k * Math.log(p) + (n - k) * Math.log(1 - p)) }
-
-            function binomPVal(n, k, p) { let pv = 0;
-                for (let x = k; x <= n; x++) pv += binomProb(n, x, p);
-                return Math.min(pv, 1) }
-
-            function cochranQ(data) { const n = data[0].length,
-                    k = data.length;
-                const colSums = data[0].map((_, j) => data.reduce((s, row) => s + (row[j] || 0), 0));
-                const hasVar = colSums.some(cs => cs > 0 && cs < k);
-                if (!hasVar) return { Q: NaN, note: 'Data degenerate: tidak ada variasi antar panelis' };
-                let sumXj = 0,
-                    sumXj2 = 0;
-                for (let j = 0; j < n; j++) { let cs = 0;
-                    for (let i = 0; i < k; i++) cs += data[i][j] || 0;
-                    sumXj += cs;
-                    sumXj2 += cs * cs }
-                let sumXi2 = 0;
-                for (let i = 0; i < k; i++) { let rs = 0;
-                    for (let j = 0; j < n; j++) rs += data[i][j] || 0;
-                    sumXi2 += rs * rs }
-                const denom = k * sumXj - sumXi2;
-                if (Math.abs(denom) < 1e-15) return { Q: NaN, note: 'Data degenerate: denominator nol' };
-                const Q = (k - 1) * (k * sumXj2 - Math.pow(sumXj, 2)) / denom;
-                return { Q: isFinite(Q) ? Q : NaN, note: null } }
-
-            // ==================== ANOVA (dfE CORRECTED) ====================
-            function calcEffectiveDF(samples, nS, nP) { let validCells = 0;
-                for (const s of samples) validCells += s.values.filter(v => v !== 'missing' && !isNaN(v)).length;
-                return Math.max(1, validCells - nS - nP + 1) }
-
-            function twoWayANOVA(samples) { const validS = samples.filter(s => s.values.some(v => v !== 'missing' && !
-                    isNaN(v)));
-                if (validS.length < 2) return null;
-                const nS = validS.length,
-                    nP = validS[0].values.length;
-                const all = validS.map(s => s.values).flat().filter(v => v !== 'missing' && !isNaN(v));
-                if (all.length < 3) return null;
-                const gM = all.reduce((a, b) => a + b, 0) / all.length;
-                let ssT = 0;
-                all.forEach(v => ssT += Math.pow(v - gM, 2));
-                let ssS = 0;
-                validS.forEach(s => { const m = calcMean(s.values); if (!isNaN(m)) ssS += nP * Math.pow(m - gM,
-                    2) });
-                let ssP = 0;
-                for (let j = 0; j < nP; j++) { let ps = 0,
-                        c = 0;
-                    for (let i = 0; i < nS; i++) { const v = validS[i].values[j]; if (v !== 'missing' && !isNaN(
-                            v)) { ps += v;
-                            c++ } } if (c > 0) ssP += c * Math.pow(ps / c - gM, 2) }
-                const ssE = Math.max(0, ssT - ssS - ssP);
-                const dfS = nS - 1,
-                    dfP = nP - 1,
-                    dfE = calcEffectiveDF(validS, nS, nP);
-                const msS = ssS / dfS,
-                    msP = ssP / dfP,
-                    msE = ssE / dfE;
-                return { ssS, ssP, ssE, ssT, dfS, dfP, dfE, msS, msP, msE, fS: msE > 0 ? msS / msE : 0, fP: msE > 0 ?
-                        msP / msE : 0, gM } }
-
-            function tukeyHSD(samples, msE, dfE, alpha) { const validS = samples.filter(s => s.values.some(v => v !==
-                    'missing' && !isNaN(v)));
-                if (validS.length < 2) return { comps: [], hsd: 0, q: 0 };
-                const n = validS[0].values.length,
-                    q = getQCrit(validS.length, dfE, alpha),
-                    hsd = q * Math.sqrt(Math.max(0, msE) / n);
-                const comps = [],
-                    means = validS.map(s => calcMean(s.values));
-                for (let i = 0; i < validS.length; i++)
-                    for (let j = i + 1; j < validS.length; j++) { if (isNaN(means[i]) || isNaN(means[j]))
-                        continue;
-                        const d = means[i] - means[j],
-                            ad = Math.abs(d);
-                        comps.push({ s1: validS[i].code, s2: validS[j].code, diff: d, abs: ad, hsd, sig: ad > hsd,
-                            lo: d - hsd, hi: d + hsd }) }
-                return { comps, hsd, q } }
-
-            // ==================== GRID ====================
-            function renderGrid() { const hdr = document.getElementById('gridHeader'),
-                    bdy = document.getElementById('gridBody');
-                const isBin = S.method === 'triangel' || S.method === 'duotrio',
-                    isQDA = S.method === 'deskriptif';
-                let hh = '<tr><th class="corner-header"></th><th class="col-header">Kode</th>';
-                if (isBin) { hh += '<th class="col-header">Sesi</th>';
-                    for (let i = 1; i <= S.panelCt; i++) hh += `<th class="col-header">P${i}</th>`;
-                    hh +=
-                        '<th class="col-header">Benar</th><th class="col-header">%</th><th class="col-header">P-val</th>' } else if (
-                    isQDA) { hh += '<th class="col-header">Nama</th>';
-                    const attrs = getQDAttrs();
-                    for (let i = 0; i < attrs.length; i++) hh +=
-                        `<th class="col-header">${sanitizeHTML(attrs[i])}</th>`;
-                    hh += '<th class="col-header">Mean</th><th class="col-header">SD</th>' } else { hh +=
-                        '<th class="col-header">Nama</th>';
-                    for (let i = 1; i <= S.panelCt; i++) hh += `<th class="col-header">P${i}</th>`;
-                    hh +=
-                        '<th class="col-header">Mean</th><th class="col-header">SD</th><th class="col-header">Min</th><th class="col-header">Max</th>' }
-                hh += '</tr>';
-                hdr.innerHTML = hh;
-                let bh = '';
-                S.data.forEach((s, ri) => { bh += '<tr>';
-                    bh += `<th class="row-header">${ri+1}</th>`;
-                    bh +=
-                        `<td data-row="${ri}" data-col="0" data-edit="1"><span class="cell-content">${sanitizeHTML(String(s.code))}</span></td>`;
-                    bh +=
-                        `<td data-row="${ri}" data-col="1" data-edit="1"><span class="cell-content">${sanitizeHTML(String(s.name))}</span></td>`;
-                    const dc = isQDA ? s.values.length : S.panelCt;
-                    for (let i = 0; i < dc; i++) { const v = s.values[i],
-                            isM = v === 'missing';
-                        bh +=
-                            `<td data-row="${ri}" data-col="${i+2}" data-edit="1" class="${isM?'missing-cell':''}"><span class="cell-content">${isM?'NA':sanitizeHTML(String(v??''))}</span></td>` }
-                    if (isBin) { const tb = s.values.filter(v => v === 1).length,
-                            pb = ((tb / S.panelCt) * 100).toFixed(1),
-                            p = S.method === 'triangel' ? 1 / 3 : 1 / 2,
-                            pv = binomPVal(S.panelCt, tb, p);
-                        bh +=
-                            `<td style="font-weight:600;background:#f0f4ff"><span>${tb}/${S.panelCt}</span></td><td style="font-weight:600;background:#f0f4ff"><span>${pb}%</span></td><td style="font-weight:600;background:${pv<=0.05?'#d4edda':'#fff3cd'}"><span>${pv.toFixed(4)}</span></td>` } else if (
-                        isQDA) { const mn = calcMean(s.values),
-                            sd = calcSD(s.values);
-                        bh +=
-                            `<td style="font-weight:600;background:#f0f4ff"><span>${isNaN(mn)?'NA':mn.toFixed(2)}</span></td><td style="font-weight:600;background:#f0f4ff"><span>${isNaN(sd)?'NA':sd.toFixed(2)}</span></td>` } else { const
-                            mn = calcMean(s.values),
-                            sd = calcSD(s.values),
-                            vals = s.values.filter(v => v !== 'missing' && !isNaN(v)),
-                            mnv = vals.length > 0 ? Math.min(...vals) : NaN,
-                            mx = vals.length > 0 ? Math.max(...vals) : NaN;
-                        bh +=
-                            `<td style="font-weight:600;background:#f0f4ff"><span>${isNaN(mn)?'NA':mn.toFixed(2)}</span></td><td style="font-weight:600;background:#f0f4ff"><span>${isNaN(sd)?'NA':sd.toFixed(2)}</span></td><td style="font-weight:600;background:#f0f4ff"><span>${isNaN(mnv)?'NA':mnv}</span></td><td style="font-weight:600;background:#f0f4ff"><span>${isNaN(mx)?'NA':mx}</span></td>` }
-                    bh += '</tr>' });
-                bdy.innerHTML = bh;
-                refreshSelection();
-                updateMissingIndicator() }
-
-            function getQDAttrs() { if (S.data.length > 0 && S.data[0].values.length <= S.qdaAttrs.length) return S
-                    .qdaAttrs.slice(0, S.data[0].values.length);
-                return S.qdaAttrs.slice(0, S.panelCt) }
-
-            function updateMissingIndicator() { const mi = document.getElementById('missingIndicator');
-                if (!mi) return;
-                let total = 0,
-                    missing = 0;
-                S.data.forEach(s => s.values.forEach(v => { total++; if (v === 'missing') missing++ }));
-                if (missing > 0) { mi.style.display = 'inline';
-                    mi.textContent = `⚠️ Missing: ${((missing/total)*100).toFixed(1)}%` } else mi.style.display =
-                    'none' }
-
-            // ==================== EVENTS ====================
-            function setupEvents() { const grid = document.getElementById('excelGrid');
-                if (grid._evtSetup) return;
-                grid._evtSetup = !0;
-                grid.addEventListener('mousedown', function(e) { const td = e.target.closest('td'); if (!td)
-                    return; if (S.editing) finishEdit();
-                    const r = parseInt(td.dataset.row),
-                        c = parseInt(td.dataset.col); if (isNaN(r) || isNaN(c)) return;
-                    S.drag = !0;
-                    S.dragStart = { row: r, col: c };
-                    setActive(r, c);
-                    setRange(r, c, r, c);
-                    e.preventDefault() });
-                grid.addEventListener('mousemove', function(e) { if (!S.drag) return;
-                    const td = e.target.closest('td'); if (!td) return;
-                    const r = parseInt(td.dataset.row),
-                        c = parseInt(td.dataset.col); if (isNaN(r) || isNaN(c)) return;
-                    setRange(Math.min(S.dragStart.row, r), Math.max(S.dragStart.row, r), Math.min(S.dragStart
-                        .col, c), Math.max(S.dragStart.col, c));
-                    refreshSelection();
-                    updateStatus() });
-                grid.addEventListener('dblclick', function(e) { const td = e.target.closest('td'); if (!td || td
-                        .dataset.edit === '0') return;
-                    const r = parseInt(td.dataset.row),
-                        c = parseInt(td.dataset.col); if (isNaN(r) || isNaN(c)) return;
-                    startEdit(td, r, c) }) }
-
-            function setActive(r, c) { S.active = { row: r, col: c };
-                const cn = ['Kode', 'Nama'];
-                if (S.method === 'deskriptif') { getQDAttrs().forEach(a => cn.push(a));
-                    cn.push('Mean', 'SD') } else if (S.method === 'triangel' || S.method === 'duotrio') { for (let i =
-                        1; i <= S.panelCt; i++) cn.push(`P${i}`);
-                    cn.push('Total', '%', 'P-val') } else { for (let i = 1; i <= S.panelCt; i++) cn.push(`P${i}`);
-                    cn.push('Mean', 'SD', 'Min', 'Max') }
-                document.getElementById('cellRef').textContent = `${cn[c]||'?'}${r+1}`;
-                const td = document.querySelector(`td[data-row="${r}"][data-col="${c}"]`),
-                    fi = document.getElementById('formulaInput');
-                if (td && fi && !S.editing) fi.value = td.querySelector('.cell-content')?.textContent || '' }
-
-            function setRange(mnR, mxR, mnC, mxC) { S.range = { minRow: mnR, maxRow: mxR, minCol: mnC, maxCol: mxC } }
-
-            function refreshSelection() { document.querySelectorAll('#excelGrid td').forEach(t => t.classList.remove(
-                    'active-cell', 'selected-cell'));
-                const at = document.querySelector(
-                    `td[data-row="${S.active.row}"][data-col="${S.active.col}"]`);
-                if (at) at.classList.add('active-cell');
-                if (S.range)
-                    for (let r = S.range.minRow; r <= S.range.maxRow; r++)
-                        for (let c = S.range.minCol; c <= S.range.maxCol; c++) { const td = document.querySelector(
-                                `td[data-row="${r}"][data-col="${c}"]`); if (td && !(r === S.active.row && c === S
-                                .active.col)) td.classList.add('selected-cell') } }
-
-            function getRange() { return S.range || { minRow: S.active.row, maxRow: S.active.row, minCol: S.active.col,
-                    maxCol: S.active.col } }
-
-            // ==================== EDITING ====================
-            function startEdit(td, r, c) { if (S.editing) finishEdit(); if (td.dataset.edit === '0') return;
-                S.editing = !0;
-                td.classList.add('editing');
-                const cv = td.querySelector('.cell-content')?.textContent || '',
-                    inp = document.createElement('input');
-                inp.type = 'text';
-                inp.className = 'cell-editor';
-                inp.value = cv === 'NA' ? '' : cv;
-                td.innerHTML = '';
-                td.appendChild(inp);
-                inp.focus();
-                inp.select();
-                inp.addEventListener('blur', () => finishEdit());
-                inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault();
-                        finishEdit();
-                        navigate('down') } else if (e.key === 'Tab') { e.preventDefault();
-                        finishEdit();
-                        navigate(e.shiftKey ? 'left' : 'right') } else if (e.key === 'Escape') { e
-                        .preventDefault();
-                        inp.value = cv;
-                        finishEdit() } }) }
-
-            function finishEdit() { if (!S.editing) return;
-                const et = document.querySelector('td.editing');
-                if (!et) { S.editing = !1; return }
-                const inp = et.querySelector('input.cell-editor'),
-                    nv = inp ? inp.value : '';
-                const r = parseInt(et.dataset.row),
-                    c = parseInt(et.dataset.col);
-                if (!isNaN(r) && !isNaN(c)) { if (nv.trim() === '' || nv.toLowerCase() === 'na') { updateDirect(r, c,
-                            'missing');
-                        et.classList.remove('editing');
-                        et.classList.add('missing-cell');
-                        et.innerHTML = '<span class="cell-content">NA</span>';
-                        S.editing = !1;
-                        renderGrid(); return } if (!updateModel(r, c, nv)) { const ov = getOrig(r, c);
-                        et.classList.remove('editing');
-                        et.innerHTML =
-                            `<span class="cell-content">${sanitizeHTML(String(ov))}</span>`;
-                        S.editing = !1;
-                        refreshSelection(); return } }
-                et.classList.remove('editing');
-                et.innerHTML = `<span class="cell-content">${sanitizeHTML(nv)}</span>`;
-                S.editing = !1;
-                S.unsaved = !0;
-                S.auditLog.push({ ts: new Date().toISOString(), action: 'edit', row: r, col: c, newVal: nv });
-                renderGrid();
-                refreshSelection() }
-
-            function getOrig(r, c) { if (c === 0) return S.data[r]?.code || ''; if (c === 1) return S.data[r]?.name ||
-                    '';
-                const md = S.method === 'deskriptif' ? S.data[r]?.values.length : S.panelCt; if (c >= 2 && c < md + 2)
-                    return S.data[r]?.values[c - 2] ?? '';
-                return '' }
-
-            function updateModel(r, c, value) { if (c === 0) { S.data[r].code = value; return !0 } if (c === 1) { S.data[
-                        r].name = value;
-                    return !0 }
-                const md = S.method === 'deskriptif' ? S.data[r].values.length : S.panelCt;
-                if (c >= 2 && c < md + 2) { if (S.method === 'triangel' || S.method === 'duotrio') { const nv =
-                        parseFloat(value); if (isNaN(nv) || (nv !== 0 && nv !== 1)) { notif('0 atau 1',
-                            'warning');
-                        return !1 }
-                        S.data[r].values[c - 2] = nv; return !0 } else { const sc = getScaleMax();
-                        const v = validateScale(value, sc); if (!v.ok) { notif(v.msg, 'warning');
-                            return !1 }
-                        S.data[r].values[c - 2] = v.value; return !0 } } return !1 }
-
-            function updateDirect(r, c, value) { if (c === 0) S.data[r].code = '';
-            else if (c === 1) S.data[r].name = '';
-            else { const di = c - 2; if (di < S.data[r].values.length) S.data[r].values[di] = value } }
-
-            function navigate(dir) { if (S.data.length === 0) { notif('Tidak ada data', 'warning'); return }
-                let nr = S.active.row,
-                    nc = S.active.col,
-                    mc;
-                if (S.method === 'triangel' || S.method === 'duotrio') mc = S.panelCt + 4;
-                else if (S.method === 'deskriptif') mc = (S.data[0]?.values.length || 0) + 3;
-                else mc = S.panelCt + 5;
-                switch (dir) { case 'up':
-                        nr = Math.max(0, nr - 1);
-                        break;
-                    case 'down':
-                        nr = Math.min(S.data.length - 1, nr + 1);
-                        break;
-                    case 'left':
-                        nc = Math.max(0, nc - 1);
-                        break;
-                    case 'right':
-                        nc = Math.min(mc, nc + 1);
-                        break }
-                setActive(nr, nc);
-                setRange(nr, nc, nr, nc);
-                refreshSelection();
-                updateStatus() }
-
-            // ==================== OPS ====================
-            function toggleMissing() { const range = getRange();
-                for (let r = range.minRow; r <= range.maxRow; r++)
-                    for (let c = range.minCol; c <= range.maxCol; c++) { const td = document.querySelector(
-                            `td[data-row="${r}"][data-col="${c}"]`); if (td && td.dataset.edit === '1' && c >= 2) {
-                            const di = c - 2,
-                                cur = S.data[r].values[di];
-                            S.data[r].values[di] = cur === 'missing' ? 0 : 'missing' } }
-                renderGrid();
-                notif('⚠️ Toggle missing') }
-
-            function copySelection() { const range = getRange();
-                S.clip = [];
-                for (let r = range.minRow; r <= range.maxRow; r++) { const rd = [];
-                    for (let c = range.minCol; c <= range.maxCol; c++) { const td = document.querySelector(
-                            `td[data-row="${r}"][data-col="${c}"]`);
-                        rd.push(td ? (td.querySelector('.cell-content')?.textContent || '') : '') }
-                    S.clip.push(rd) }
-                notif('📋 Dicopy') }
-
-            function pasteSelection() { if (!S.clip) { notif('Tidak ada data', 'warning'); return }
-                const sr = S.active.row,
-                    sc = S.active.col;
-                for (let r = 0; r < S.clip.length; r++) { const tr = sr + r; if (tr >= S.data.length) break;
-                    for (let c = 0; c < S.clip[r].length; c++) { const tc = sc + c,
-                            td = document.querySelector(`td[data-row="${tr}"][data-col="${tc}"]`); if (td && td
-                            .dataset.edit === '1') updateModel(tr, tc, S.clip[r][c]) } }
-                renderGrid();
-                notif('📥 Dipaste') }
-
-            function clearSelectedCells() { const range = getRange();
-                const dv = (S.method === 'triangel' || S.method === 'duotrio') ? 0 : 'missing';
-                for (let r = range.minRow; r <= range.maxRow; r++)
-                    for (let c = range.minCol; c <= range.maxCol; c++) { const td = document.querySelector(
-                            `td[data-row="${r}"][data-col="${c}"]`); if (td && td.dataset.edit === '1') updateDirect(
-                            r, c, dv) }
-                renderGrid();
-                notif('🗑️ Cleared') }
-
-            function insertRow() { const row = S.active.row;
-                const nc = S.data.length < 26 ? String.fromCharCode(65 + S.data.length) : `S${S.data.length+1}`;
-                let dn; if (S.method === 'triangel' || S.method === 'duotrio') dn = `Sesi ${S.data.length+1}`;
-                else dn = `Sampel ${nc}`;
-                const vals = Array(S.method === 'deskriptif' ? S.qdaAttrs.length : S.panelCt).fill(0);
-                S.data.splice(row, 0, { code: nc, name: dn, values: vals });
-                renderGrid();
-                setActive(row, 0);
-                setRange(row, 0, row, 0);
-                notif('➕ Row') }
-
-            function deleteRow() { if (S.data.length <= 1) { notif('Min 1 baris', 'warning'); return }
-                const row = S.active.row;
-                S.data.splice(row, 1); if (S.active.row >= S.data.length) S.active.row = S.data.length - 1;
-                renderGrid();
-                notif('➖ Row') }
-
-            // ==================== METHOD SWITCHING ====================
-            function switchMethod(method) { if (S.unsaved && method !== S.method) { if (!confirm(
-                        `Ganti ke ${getMethodName(method)}?`)) { document.getElementById('varMethod').value = S
-                        .method; return } }
-                S.method = method;
-                updateToolbarBtns();
-                const mp = MP[method] || { min: 10 },
-                    pi = document.getElementById('varPanelists');
-                pi.min = mp.min;
-                document.getElementById('minPanelistNote').textContent =
-                `Min: ${mp.min} (rek: ${mp.rec})`;
-                if (method === 'deskriptif') { S.qdaAttrs = document.getElementById('qdaAttributes')?.value.split(',')
-                        .map(a => a.trim()).filter(a => a) || ['Warna', 'Aroma', 'Rasa', 'Tekstur', 'Aftertaste'];
-                    S.panelCt = S.qdaAttrs.length;
-                    pi.value = S.panelCt;
-                    document.getElementById('qdaAttributesGroup').style.display = 'flex';
-                    document.getElementById('trainedPanelGroup').style.display = 'flex';
-                    document.getElementById('scaleGroup').style.display = 'flex' } else { if (S.panelCt < mp.min) { S
-                        .panelCt = mp.min;
-                        pi.value = mp.min }
-                    document.getElementById('qdaAttributesGroup').style.display = 'none';
-                    document.getElementById('trainedPanelGroup').style.display = 'none';
-                    document.getElementById('scaleGroup').style.display = (method === 'triangel' || method ===
-                        'duotrio') ? 'none' : 'flex' }
-                initData();
-                renderGrid();
-                updateStatus();
-                document.getElementById('varMethod').value = method;
-                updateMethodologyNote();
-                showWarnings() }
-
-            function updateToolbarBtns() { ['jamak', 'triangel', 'duotrio', 'deskriptif'].forEach(m => { const b =
-                    document.getElementById(`btn-${m}`); if (b) b.className = m === S.method ? 'active' : '' }) }
-
-            function showWarnings() { const wb = document.getElementById('warningBar');
-                if (S.method === 'triangel' && S.panelCt < 24) { wb.style.display = 'block';
-                    wb.textContent = '⚠️ ISO 4120:2004 merekomendasikan 24-30 panelis' } else if (S.method ===
-                    'duotrio' && S.panelCt < 20) { wb.style.display = 'block';
-                    wb.textContent = '⚠️ ISO 10399:2017 merekomendasikan ≥20 panelis' } else wb.style.display =
-                    'none' }
-
-            function updateMethodologyNote() { const mn = document.getElementById('methodologyNote'),
-                    notes = { jamak: '📋 ISO 5495:2005 — Two-way ANOVA (panelis=blok). dfE disesuaikan untuk missing data.',
-                        triangel: '🔺 ISO 4120:2004 — Binomial (p0=1/3).',
-                        duotrio: '👥 ISO 10399:2017 — Binomial (p0=1/2).',
-                        deskriptif: '📝 ISO 13299:2016 — Statistik deskriptif per atribut. ANOVA per atribut membutuhkan skor individual per panelis.' };
-                if (mn) mn.textContent = notes[S.method] || '' }
-
-            function initData() { if (S.method === 'triangel') S.data = [{ code: 'S1', name: 'Sesi 1',
-                    values: Array(S.panelCt).fill(0).map(() => Math.round(Math.random())) }];
-                else if (S.method === 'duotrio') S.data = [{ code: 'S1', name: 'Sesi 1',
-                    values: Array(S.panelCt).fill(0).map(() => Math.round(Math.random())) }];
-                else if (S.method === 'deskriptif') { const ac = Math.min(S.qdaAttrs.length, S.panelCt);
-                    S.data = [{ code: 'A', name: 'Sampel A', values: Array(ac).fill(0).map(() => Math.floor(Math
-                            .random() * 5) + 4) }, { code: 'B', name: 'Sampel B', values: Array(ac).fill(0).map(
-                            () => Math.floor(Math.random() * 5) + 3) }, { code: 'C', name: 'Sampel C',
-                        values: Array(ac).fill(0).map(() => Math.floor(Math.random() * 5) + 5) }] } else S.data = [{ code: 'A',
-                        name: 'Sampel A', values: [7, 8, 6, 7, 8, 7, 6, 7, 8, 7] }, { code: 'B', name: 'Sampel B',
-                        values: [5, 6, 5, 4, 6, 5, 4, 5, 6, 5] }, { code: 'C', name: 'Sampel C',
-                        values: [8, 7, 8, 9, 7, 8, 9, 8, 7, 8] }];
-                S.unsaved = !1;
-                S.active = { row: 0, col: 0 };
-                S.range = { minRow: 0, maxRow: 0, minCol: 0, maxCol: 0 } }
-
-            function getMethodName(m) { const n = { jamak: 'Perbandingan Jamak', triangel: 'Triangel',
-                    duotrio: 'Duo-Trio', deskriptif: 'Deskriptif QDA' };
-                return n[m] || m }
-
-            // ==================== RANDOM CODES ====================
-            function generateRandomCodes() { const codes = new Set();
-                S.data.forEach(s => { let c;
-                    do { c = Math.floor(Math.random() * 900) + 100 } while (codes.has(c));
-                    codes.add(c);
-                    s.code = String(c) });
-                renderGrid();
-                notif('🎲 Kode 3-digit acak') }
-
-            // ==================== CSV WITH METADATA ====================
-            function exportCSV() { const alpha = parseFloat(document.getElementById('varAlpha')?.value || 0.05);
-                let csv = '';
-                csv += `# SPSS-Sensori v5.0 Output\n`;
-                csv += `# Method: ${getMethodName(S.method)}\n`;
-                csv += `# Alpha: ${alpha}\n`;
-                csv += `# Scale: ${getScaleMax()}-point (min=${getScaleMin()})\n`;
-                csv += `# N: ${S.method==='deskriptif'?(S.data[0]?.values.length||0):S.panelCt}\n`;
-                csv += `# Generated: ${new Date().toISOString()}\n`;
-                csv += `# Missing values: 'NA'\n#\n`;
-                const isBin = S.method === 'triangel' || S.method === 'duotrio',
-                    isQDA = S.method === 'deskriptif';
-                if (isBin) { csv += 'Session,Panelist,Response\n';
-                    S.data.forEach(s => { s.values.forEach((v, i) => { csv +=
-                            `${escapeCSV(s.code)},P${i+1},${v==='missing'?'NA':v}\n` }) }) } else if (isQDA) { csv +=
-                        'Sample,' + getQDAttrs().map(escapeCSV).join(',') + '\n';
-                    S.data.forEach(s => { csv += escapeCSV(s.code) + ',' + s.values.map(v => v === 'missing' ? 'NA' :
-                            v).join(',') + '\n' }) } else { csv += 'Sample,' + Array.from({ length: S.panelCt },
-                        (_, i) => `P${i+1}`).join(',') + '\n';
-                    S.data.forEach(s => { csv += escapeCSV(s.code) + ',' + s.values.map(v => v === 'missing' ? 'NA' :
-                            v).join(',') + '\n' }) }
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = `sensori-${new Date().toISOString().slice(0,10)}.csv`;
-                a.click() }
-
-            // ==================== ANALYSIS ====================
-            function runAnalysis() { const alpha = parseFloat(document.getElementById('varAlpha')?.value || 0.05);
-                const mp = MP[S.method] || { min: 3 };
-                const effN = S.method === 'deskriptif' ? (S.data[0]?.values.length || 0) : S.panelCt;
-                if (S.method !== 'deskriptif' && effN < mp.min) { notif(
-                        `Min ${mp.min} panelis untuk ${getMethodName(S.method)}`, 'warning'); return }
-                const chk = document.querySelectorAll('#preAnalysisChecklist input[type=checkbox]');
-                const allChecked = Array.from(chk).every(c => c.checked);
-                if (!allChecked) { const proceed = confirm(
-                        '⚠️ Checklist pra-analisis belum lengkap.\n\nHasil analisis mungkin tidak valid menurut ISO 6658:2017 §7.\nRandomisasi kode sampel dan urutan penyajian adalah syarat wajib.\n\nLanjutkan analisis?'
-                        ); if (!proceed) return }
-                let out = '';
-                out += 'SPSS-Sensori v5.0 — Output\n';
-                out += '='.repeat(55) + '\n';
-                out += `Metode: ${getMethodName(S.method)} | α=${alpha} | N=${effN}\n`;
-                out += `Skala: ${getScaleMax()}-point (min=${getScaleMin()}) | ${new Date().toLocaleString()}\n`;
-                out += '='.repeat(55) + '\n\n';
-                if (!allChecked) out +=
-                '⚠️ Checklist pra-analisis tidak lengkap — hasil tidak compliant ISO 6658 §7.\n\n';
-                out += '⚠️ ASUMSI STATISTIK (verifikasi manual):\n';
-                out += '  □ Residual normal (Shapiro-Wilk / QQ-plot)\n';
-                out += '  □ Varians homogen (Levene test / residual vs fitted plot)\n';
-                out += '  □ Observasi independen\n';
-                out += '  ❗ Jika dilanggar → transformasi (log/sqrt) atau Friedman non-parametrik\n\n';
-                let totalVals = 0,
-                    totalMissing = 0;
-                S.data.forEach(s => { s.values.forEach(v => { totalVals++; if (v === 'missing')
-                    totalMissing++ }) });
-                if (totalMissing > 0) out +=
-                    `⚠️ Missing data: ${totalMissing}/${totalVals} (${((totalMissing/totalVals)*100).toFixed(1)}%)\n\n`;
-
-                if (S.method === 'triangel' || S.method === 'duotrio') { const prob = S.method === 'triangel' ? 1 / 3 :
-                        1 / 2;
-                    out +=
-                        `UJI BINOMIAL (${S.method==='triangel'?'ISO 4120:2004':'ISO 10399:2017'})\n`;
-                    out += '-'.repeat(55) + '\n';
-                    out += `p0 = ${prob.toFixed(3)}\n\n`;
-                    S.data.forEach(s => { const cr = s.values.filter(v => v === 1).length,
-                            tr = s.values.length;
-                        const pv = binomPVal(tr, cr, prob);
-                        out +=
-                            `${s.name}: ${cr}/${tr} (${((cr/tr)*100).toFixed(1)}%) | p=${pv.toFixed(6)} ${pv<=alpha?'✅':'❌'}\n` });
-                    let tc = 0,
-                        tr2 = 0;
-                    S.data.forEach(s => { tc += s.values.filter(v => v === 1).length;
-                        tr2 += s.values.length });
-                    const ppv = binomPVal(tr2, tc, prob);
-                    const binData = S.data.map(s => s.values.map(v => v === 1 ? 1 : 0));
-                    const cq = cochranQ(binData);
-                    out += `\n⚠️ POOLED: ${tc}/${tr2} | p=${ppv.toFixed(6)}\n`;
-                    if (isNaN(cq.Q)) out += `   Cochran's Q: ${cq.note}\n`;
-                    else out +=
-                        `   Cochran's Q = ${cq.Q.toFixed(3)} ${cq.Q>3.84?'⚠️ Heterogen → gunakan PER-SESI':'✅ Homogen'}\n`;
-                    out += `   ISO 4120/10399: Analisis per-sesi adalah metode utama.\n` } else if (S.method ===
-                    'deskriptif') { out += 'QDA — DESKRIPTIF PER ATRIBUT (ISO 13299:2016)\n';
-                    out += '-'.repeat(55) + '\n';
-                    const attrs = getQDAttrs();
-                    out += `Atribut: ${attrs.join(', ')}\n`;
-                    const pt = document.getElementById('panelType')?.value || 'trained';
-                    if (pt !== 'trained') out += '⚠️ Panelis BUKAN terlatih — hasil EKSPLORATIF.\n';
-                    out += '\n⚠️ ANOVA per atribut membutuhkan skor individual per panelis.\n';
-                    out += '   Data saat ini: 1 nilai agregat per atribut per sampel.\n';
-                    out += '   Hanya statistik deskriptif yang valid:\n\n';
-                    out += 'Atribut        Mean A  Mean B  Mean C  Range\n';
-                    out += '-'.repeat(55) + '\n';
-                    attrs.forEach((attr, ai) => { const means = S.data.map(s => { const v = s.values[ai];
-                            return (v === 'missing' || isNaN(v)) ? NaN : v });
-                        const validM = means.filter(m => !isNaN(m));
-                        const mn = validM.length > 0 ? Math.min(...validM) : NaN,
-                            mx = validM.length > 0 ? Math.max(...validM) : NaN;
-                        out +=
-                            `${attr.padEnd(14)} ${means.map(m=>isNaN(m)?'NA'.padStart(6):m.toFixed(2).padStart(6)).join(' ')}  ${isNaN(mn)?'NA':mn.toFixed(1)}-${isNaN(mx)?'NA':mx.toFixed(1)}\n` }) } else { out +=
-                        'TWO-WAY ANOVA DENGAN BLOK (ISO 5495:2005)\n';
-                    out += '-'.repeat(55) + '\n';
-                    const an = twoWayANOVA(S.data);
-                    if (!an) { out += '❌ Data tidak cukup untuk ANOVA.\n';
-                        document.getElementById('outputContent').textContent = out;
-                        switchTab('output');
-                        genCharts(); return }
-                    const fcS = getFCrit(an.dfS, an.dfE, alpha),
-                        fcP = getFCrit(an.dfP, an.dfE, alpha),
-                        pvS = fPVal(an.fS, an.dfS, an.dfE);
-                    out += 'Source      SS       df     MS       F        F-crit   P-value\n';
-                    out += '-'.repeat(70) + '\n';
-                    out +=
-                        `Sampel     ${an.ssS.toFixed(2).padStart(8)} ${an.dfS.toString().padStart(5)} ${an.msS.toFixed(2).padStart(8)} ${an.fS.toFixed(3).padStart(7)} ${fcS.toFixed(3).padStart(8)} ${pvS.toFixed(4).padStart(8)}\n`;
-                    out +=
-                        `Panelis    ${an.ssP.toFixed(2).padStart(8)} ${an.dfP.toString().padStart(5)} ${an.msP.toFixed(2).padStart(8)} ${an.fP.toFixed(3).padStart(7)} ${fcP.toFixed(3).padStart(8)}\n`;
-                    out +=
-                        `Error      ${an.ssE.toFixed(2).padStart(8)} ${an.dfE.toString().padStart(5)} ${an.msE.toFixed(2).padStart(8)}\n`;
-                    out +=
-                    `Total      ${an.ssT.toFixed(2).padStart(8)}\n\n`;
-                    out +=
-                    `dfE dihitung dari observasi valid (N_valid - sampel - panelis + 1)\n`;
-                    out +=
-                    `F(${an.dfS},${an.dfE}) = ${an.fS.toFixed(3)}, p = ${pvS.toFixed(6)}\n`;
-                    if (an.fS > fcS) { out += '✅ SIGNIFIKAN\n\nTUKEY HSD:\n';
-                        const tk = tukeyHSD(S.data, an.msE, an.dfE, alpha);
-                        out +=
-                        `HSD = ${tk.hsd.toFixed(3)} (q=${tk.q.toFixed(3)})\n`;
-                        tk.comps.forEach(c => out +=
-                            `${c.s1} vs ${c.s2}: Δ=${c.diff.toFixed(2)} ${c.sig?'✅':'❌'} [${c.lo.toFixed(2)},${c.hi.toFixed(2)}]\n`
-                            ) } else out += '❌ TIDAK SIGNIFIKAN\n' }
-                                    out += '\n' + '='.repeat(55) + '\n';
-out += '📋 KESIMPULAN ANALISIS\n';
-out += '='.repeat(55) + '\n\n';
-
-if (S.method === 'triangel' || S.method === 'duotrio') {
-    // Kesimpulan untuk Triangel/Duo-Trio
-    const prob = S.method === 'triangel' ? 1/3 : 1/2;
-    const totalCorrect = S.data.reduce((sum, s) => sum + s.values.filter(v => v === 1).length, 0);
-    const totalResp = S.data.reduce((sum, s) => sum + s.values.length, 0);
-    const pv = binomPVal(totalResp, totalCorrect, prob);
-    
-    out += `1. HASIL UJI PEMBEDAAN:\n`;
-    out += `   ${pv <= alpha ? '✅' : '❌'} Panelis ${pv <= alpha ? 'DAPAT' : 'TIDAK DAPAT'} membedakan sampel secara signifikan\n`;
-    out += `   (${totalCorrect} dari ${totalResp} jawaban benar, p = ${pv.toFixed(4)}, α = ${alpha})\n\n`;
-    
-    out += `2. INTERPRETASI PRAKTIS:\n`;
-    if (pv <= alpha) {
-        out += `   • Produk yang diuji memiliki perbedaan sensorik yang nyata\n`;
-        out += `   • Perbedaan dapat dideteksi oleh panelis di atas batas tebakan (${(prob*100).toFixed(0)}%)\n`;
-        out += `   • ${S.method === 'triangel' ? 'Uji triangle' : 'Uji duo-trio'} mengkonfirmasi adanya perbedaan\n`;
-    } else {
-        out += `   • Tidak cukup bukti untuk menyatakan ada perbedaan sensorik\n`;
-        out += `   • Produk mungkin serupa secara sensorik\n`;
-        out += `   • Pertimbangkan meningkatkan jumlah panelis untuk deteksi yang lebih sensitif\n`;
+        }else{html+='<strong>Status:</strong> ❌ Data tidak cukup untuk ANOVA'}
     }
-    
-} else if (S.method === 'deskriptif') {
-    // Kesimpulan untuk QDA
-    const attrs = getQDAttrs();
-    out += `1. PROFIL SENSORIK:\n`;
-    
-    // Cari atribut dengan perbedaan terbesar
-    let maxDiff = 0, maxAttr = '';
-    attrs.forEach((attr, ai) => {
-        const vals = S.data.map(s => s.values[ai]).filter(v => v !== 'missing' && !isNaN(v));
-        if (vals.length >= 2) {
-            const range = Math.max(...vals) - Math.min(...vals);
-            if (range > maxDiff) { maxDiff = range; maxAttr = attr; }
-        }
-    });
-    
-    out += `   • Atribut dengan variasi terbesar: "${maxAttr}" (rentang ${maxDiff.toFixed(1)} poin)\n`;
-    out += `   • Setiap sampel memiliki fingerprint sensorik yang berbeda\n\n`;
-    
-    out += `2. REKOMENDASI:\n`;
-    out += `   • Gunakan data per panelis untuk ANOVA yang valid\n`;
-    out += `   • Fokus pada atribut "${maxAttr}" untuk pengembangan produk\n`;
-    out += `   • Radar chart menunjukkan profil sensorik masing-masing sampel\n`;
-    
-} else {
-    // Kesimpulan untuk Perbandingan Jamak
-    const an = twoWayANOVA(S.data);
-    if (an) {
-        const pvS = fPVal(an.fS, an.dfS, an.dfE);
-        
-        out += `1. HASIL ANOVA:\n`;
-        out += `   ${an.fS > getFCrit(an.dfS, an.dfE, alpha) ? '✅' : '❌'} Terdapat perbedaan signifikan antar sampel\n`;
-        out += `   (F(${an.dfS},${an.dfE}) = ${an.fS.toFixed(2)}, p = ${pvS.toFixed(4)}, α = ${alpha})\n\n`;
-        cc.innerHTML += '<div class="chart-card" style="grid-column:1/-1"><div class="chart-title">🏆 Ranking Sampel</div><canvas id="rankingChart"></canvas></div>';
-
-const rctx2 = document.getElementById('rankingChart')?.getContext('2d');
-if (rctx2) {
-    const means = S.data.map(s => calcMean(s.values));
-    const sds = S.data.map(s => calcSD(s.values));
-    const sorted = S.data.map((s, i) => ({ code: s.code, mean: means[i], sd: sds[i] }))
-        .sort((a, b) => b.mean - a.mean);
-    
-    S.charts.push(new Chart(rctx2, {
-        type: 'bar',
-        data: {
-            labels: sorted.map(s => s.code),
-            datasets: [{
-                label: 'Mean ± SD',
-                data: sorted.map(s => s.mean),
-                backgroundColor: sorted.map((_, i) => 
-                    i === 0 ? 'rgba(232,117,12,0.8)' : 
-                    i === sorted.length-1 ? 'rgba(196,18,48,0.6)' : 
-                    'rgba(26,58,92,0.5)'
-                ),
-                borderColor: sorted.map((_, i) => 
-                    i === 0 ? '#e8750c' : 
-                    i === sorted.length-1 ? '#c41230' : 
-                    '#1a3a5c'
-                ),
-                borderWidth: 2
-            }]
-        },
-        options: {
-            indexAxis: 'y',  // Horizontal bar chart
-            responsive: !0,
-            plugins: {
-                title: { display: !0, text: 'Sampel Terbaik ke Terendah', font: { size: 14 } },
-                tooltip: { callbacks: { afterLabel: ctx => `SD: ${sorted[ctx.dataIndex]?.sd?.toFixed(2)||'N/A'}` } }
-            },
-            scales: { x: { min: minScale, max: maxScale, title: { display: !0, text: 'Skor Rata-rata' } } }
-        }
-    }));
+    content.innerHTML=html;
 }
-        
-        if (an.fS > getFCrit(an.dfS, an.dfE, alpha)) {
-            // Tambahkan ranking sampel
-            const means = S.data.map(s => ({ code: s.code, name: s.name, mean: calcMean(s.values) }));
-            means.sort((a, b) => b.mean - a.mean);
-            
-            out += `2. RANKING SAMPEL (dari tertinggi ke terendah):\n`;
-            means.forEach((m, i) => {
-                const stars = '★'.repeat(i === 0 ? 3 : i === 1 ? 2 : 1);
-                out += `   ${i+1}. ${m.code} (${m.name}): ${m.mean.toFixed(2)} ${i === 0 ? stars : ''}\n`;
-            });
-            
-            // Hasil Tukey HSD
-            const tukey = tukeyHSD(S.data, an.msE, an.dfE, alpha);
-            const sigPairs = tukey.comps.filter(c => c.sig);
-            const nonSigPairs = tukey.comps.filter(c => !c.sig);
-            
-            out += `\n3. PERBEDAAN SPESIFIK (Tukey HSD):\n`;
-            if (sigPairs.length > 0) {
-                out += `   Pasangan yang BERBEDA signifikan:\n`;
-                sigPairs.forEach(c => {
-                    out += `   • ${c.s1} vs ${c.s2}: Δ = ${c.absDiff.toFixed(2)} > HSD ${c.hsd.toFixed(2)}\n`;
-                });
-            }
-            if (nonSigPairs.length > 0) {
-                out += `   Pasangan yang SERUPA:\n`;
-                nonSigPairs.forEach(c => {
-                    out += `   • ${c.s1} vs ${c.s2}: Δ = ${c.absDiff.toFixed(2)} < HSD ${c.hsd.toFixed(2)}\n`;
-                });
-            }
-            
-            out += `\n4. INTERPRETASI PRAKTIS:\n`;
-            out += `   • Sampel terbaik: "${means[0].code}" dengan skor ${means[0].mean.toFixed(2)}\n`;
-            if (sigPairs.length > 0) {
-                out += `   • ${sigPairs.length} pasangan sampel berbeda signifikan\n`;
-            }
-            if (nonSigPairs.length > 0) {
-                out += `   • ${nonSigPairs.length} pasangan sampel serupa secara statistik\n`;
-            }
-            out += `   • Gunakan hasil Tukey HSD untuk pengambilan keputusan\n`;
-            
-        } else {
-            out += `2. INTERPRETASI:\n`;
-            out += `   • Semua sampel memiliki karakteristik sensorik yang serupa\n`;
-            out += `   • Tidak ada perbedaan yang cukup besar untuk dinyatakan signifikan\n`;
-            out += `   • Pertimbangkan: (1) menambah panelis, (2) memperjelas atribut, (3) meningkatkan training\n`;
+
+// ==================== ANALYSIS ====================
+function runAnalysis(){
+    const alpha=parseFloat(document.getElementById('varAlpha')?.value||0.05);
+    const mp=MP[S.method]||{min:3};
+    const effN=S.method==='deskriptif'?(S.data[0]?.values.length||0):S.panelCt;
+    if(S.method!=='deskriptif'&&effN<mp.min){notif(`Min ${mp.min} panelis untuk ${getMethodName(S.method)}`,'warning');return}
+    const chk=document.querySelectorAll('#preAnalysisChecklist input[type=checkbox]');
+    const allChecked=Array.from(chk).every(c=>c.checked);
+    if(!allChecked){const proceed=confirm('⚠️ Checklist pra-analisis belum lengkap.\n\nHasil analisis mungkin tidak valid menurut ISO 6658:2017 §7.\nRandomisasi kode sampel dan urutan penyajian adalah syarat wajib.\n\nLanjutkan analisis?');if(!proceed)return}
+    let out='';out+='UJI-ORGANOLEPTIK v2.0 — Output\n';out+='='.repeat(55)+'\n';
+    out+=`Metode: ${getMethodName(S.method)} | α=${alpha} | N=${effN}\n`;
+    out+=`Skala: ${getScaleMax()}-point (min=${getScaleMin()}) | ${new Date().toLocaleString()}\n`;
+    out+='='.repeat(55)+'\n\n';
+    if(!allChecked)out+='⚠️ Checklist pra-analisis tidak lengkap — hasil tidak compliant ISO 6658 §7.\n\n';
+    out+='⚠️ ASUMSI STATISTIK (verifikasi manual):\n';
+    out+='  □ Residual normal (Shapiro-Wilk / QQ-plot)\n';
+    out+='  □ Varians homogen (Levene test / residual vs fitted plot)\n';
+    out+='  □ Observasi independen\n';
+    out+='  ❗ Jika dilanggar → transformasi (log/sqrt) atau Friedman non-parametrik\n\n';
+    let totalVals=0,totalMissing=0;
+    S.data.forEach(s=>{s.values.forEach(v=>{totalVals++;if(v==='missing')totalMissing++})});
+    if(totalMissing>0)out+=`⚠️ Missing data: ${totalMissing}/${totalVals} (${((totalMissing/totalVals)*100).toFixed(1)}%)\n\n`;
+
+    if(S.method==='triangel'||S.method==='duotrio'){
+        const prob=S.method==='triangel'?1/3:1/2;
+        out+=`UJI BINOMIAL (${S.method==='triangel'?'ISO 4120:2004':'ISO 10399:2017'})\n`;out+='-'.repeat(55)+'\n';
+        out+=`p0 = ${prob.toFixed(3)}\n\n`;
+        S.data.forEach(s=>{const cr=s.values.filter(v=>v===1).length,tr=s.values.length;const pv=binomPVal(tr,cr,prob);out+=`${s.name}: ${cr}/${tr} (${((cr/tr)*100).toFixed(1)}%) | p=${pv.toFixed(6)} ${pv<=alpha?'✅':'❌'}\n`});
+        let tc=0,tr2=0;S.data.forEach(s=>{tc+=s.values.filter(v=>v===1).length;tr2+=s.values.length});
+        const ppv=binomPVal(tr2,tc,prob);
+        const binData=S.data.map(s=>s.values.map(v=>v===1?1:0));
+        const cq=cochranQ(binData);
+        out+=`\n⚠️ POOLED: ${tc}/${tr2} | p=${ppv.toFixed(6)}\n`;
+        if(isNaN(cq.Q))out+=`   Cochran's Q: ${cq.note}\n`;
+        else out+=`   Cochran's Q = ${cq.Q.toFixed(3)} ${cq.Q>3.84?'⚠️ Heterogen → gunakan PER-SESI':'✅ Homogen'}\n`;
+        out+=`   ISO 4120/10399: Analisis per-sesi adalah metode utama.\n`;
+    }else if(S.method==='deskriptif'){
+        out+='QDA — DESKRIPTIF PER ATRIBUT (ISO 13299:2016)\n';out+='-'.repeat(55)+'\n';
+        const attrs=getQDAttrs();out+=`Atribut: ${attrs.join(', ')}\n`;
+        const pt=document.getElementById('panelType')?.value||'trained';
+        if(pt!=='trained')out+='⚠️ Panelis BUKAN terlatih — hasil EKSPLORATIF.\n';
+        out+='\n⚠️ ANOVA per atribut membutuhkan skor individual per panelis.\n';
+        out+='   Data saat ini: 1 nilai agregat per atribut per sampel.\n';
+        out+='   Hanya statistik deskriptif yang valid:\n\n';
+        out+='Atribut        Mean A  Mean B  Mean C  Range\n';out+='-'.repeat(55)+'\n';
+        attrs.forEach((attr,ai)=>{const means=S.data.map(s=>{const v=s.values[ai];return(v==='missing'||isNaN(v))?NaN:v});const validM=means.filter(m=>!isNaN(m));const mn=validM.length>0?Math.min(...validM):NaN,mx=validM.length>0?Math.max(...validM):NaN;out+=`${attr.padEnd(14)} ${means.map(m=>isNaN(m)?'NA'.padStart(6):m.toFixed(2).padStart(6)).join(' ')}  ${isNaN(mn)?'NA':mn.toFixed(1)}-${isNaN(mx)?'NA':mx.toFixed(1)}\n`});
+    }else{
+        out+='TWO-WAY ANOVA DENGAN BLOK (ISO 5495:2005)\n';out+='-'.repeat(55)+'\n';
+        const an=twoWayANOVA(S.data);
+        if(!an){out+='❌ Data tidak cukup untuk ANOVA.\n';document.getElementById('outputContent').textContent=out;switchTab('output');genCharts();return}
+        const fcS=getFCrit(an.dfS,an.dfE,alpha),fcP=getFCrit(an.dfP,an.dfE,alpha),pvS=fPVal(an.fS,an.dfS,an.dfE);
+        out+='Source      SS       df     MS       F        F-crit   P-value\n';out+='-'.repeat(70)+'\n';
+        out+=`Sampel     ${an.ssS.toFixed(2).padStart(8)} ${an.dfS.toString().padStart(5)} ${an.msS.toFixed(2).padStart(8)} ${an.fS.toFixed(3).padStart(7)} ${fcS.toFixed(3).padStart(8)} ${pvS.toFixed(4).padStart(8)}\n`;
+        out+=`Panelis    ${an.ssP.toFixed(2).padStart(8)} ${an.dfP.toString().padStart(5)} ${an.msP.toFixed(2).padStart(8)} ${an.fP.toFixed(3).padStart(7)} ${fcP.toFixed(3).padStart(8)}\n`;
+        out+=`Error      ${an.ssE.toFixed(2).padStart(8)} ${an.dfE.toString().padStart(5)} ${an.msE.toFixed(2).padStart(8)}\n`;
+        out+=`Total      ${an.ssT.toFixed(2).padStart(8)}\n\n`;
+        out+=`dfE dihitung dari observasi valid (N_valid - sampel - panelis + 1)\n`;
+        out+=`F(${an.dfS},${an.dfE}) = ${an.fS.toFixed(3)}, p = ${pvS.toFixed(6)}\n`;
+        if(an.fS>fcS){out+='✅ SIGNIFIKAN\n\nTUKEY HSD:\n';const tk=tukeyHSD(S.data,an.msE,an.dfE,alpha);out+=`HSD = ${tk.hsd.toFixed(3)} (q=${tk.q.toFixed(3)})\n`;tk.comps.forEach(c=>out+=`${c.s1} vs ${c.s2}: Δ=${c.diff.toFixed(2)} ${c.sig?'✅':'❌'} [${c.lo.toFixed(2)},${c.hi.toFixed(2)}]\n`)}
+        else out+='❌ TIDAK SIGNIFIKAN\n';
+    }
+
+    // ============ KESIMPULAN ============
+    out+='\n'+'='.repeat(55)+'\n';out+='📋 KESIMPULAN ANALISIS\n';out+='='.repeat(55)+'\n\n';
+    if(S.method==='triangel'||S.method==='duotrio'){
+        const prob=S.method==='triangel'?1/3:1/2;
+        const totalCorrect=S.data.reduce((sum,s)=>sum+s.values.filter(v=>v===1).length,0);
+        const totalResp=S.data.reduce((sum,s)=>sum+s.values.length,0);
+        const pv=binomPVal(totalResp,totalCorrect,prob);
+        out+=`1. HASIL UJI PEMBEDAAN:\n`;
+        out+=`   ${pv<=alpha?'✅':'❌'} Panelis ${pv<=alpha?'DAPAT':'TIDAK DAPAT'} membedakan sampel secara signifikan\n`;
+        out+=`   (${totalCorrect} dari ${totalResp} jawaban benar, p = ${pv.toFixed(4)}, α = ${alpha})\n\n`;
+        out+=`2. INTERPRETASI PRAKTIS:\n`;
+        if(pv<=alpha){out+=`   • Produk memiliki perbedaan sensorik yang nyata\n`;out+=`   • Perbedaan dapat dideteksi di atas batas tebakan (${(prob*100).toFixed(0)}%)\n`;out+=`   • ${S.method==='triangel'?'Uji triangle':'Uji duo-trio'} mengkonfirmasi adanya perbedaan\n`}
+        else{out+=`   • Tidak cukup bukti untuk menyatakan ada perbedaan sensorik\n`;out+=`   • Produk mungkin serupa secara sensorik\n`;out+=`   • Pertimbangkan meningkatkan jumlah panelis\n`}
+    }else if(S.method==='deskriptif'){
+        const attrs=getQDAttrs();out+=`1. PROFIL SENSORIK:\n`;let maxDiff=0,maxAttr='';
+        attrs.forEach((attr,ai)=>{const vals=S.data.map(s=>s.values[ai]).filter(v=>v!=='missing'&&!isNaN(v));if(vals.length>=2){const range=Math.max(...vals)-Math.min(...vals);if(range>maxDiff){maxDiff=range;maxAttr=attr}}});
+        out+=`   • Atribut dengan variasi terbesar: "${maxAttr}" (rentang ${maxDiff.toFixed(1)} poin)\n`;
+        out+=`   • Setiap sampel memiliki fingerprint sensorik yang berbeda\n\n`;
+        out+=`2. REKOMENDASI:\n`;out+=`   • Gunakan data per panelis untuk ANOVA yang valid\n`;out+=`   • Fokus pada atribut "${maxAttr}" untuk pengembangan produk\n`;
+    }else{
+        const an=twoWayANOVA(S.data);
+        if(an){
+            const pvS=fPVal(an.fS,an.dfS,an.dfE);const fcS=getFCrit(an.dfS,an.dfE,alpha);
+            out+=`1. HASIL ANOVA:\n`;out+=`   ${an.fS>fcS?'✅':'❌'} Terdapat perbedaan signifikan antar sampel\n`;
+            out+=`   (F(${an.dfS},${an.dfE}) = ${an.fS.toFixed(2)}, p = ${pvS.toFixed(4)}, α = ${alpha})\n\n`;
+            if(an.fS>fcS){
+                const means=S.data.map(s=>({code:s.code,name:s.name,mean:calcMean(s.values)})).filter(m=>!isNaN(m.mean));
+                means.sort((a,b)=>b.mean-a.mean);
+                out+=`2. RANKING SAMPEL (dari tertinggi ke terendah):\n`;
+                means.forEach((m,i)=>{const stars='★'.repeat(i===0?3:i===1?2:1);out+=`   ${i+1}. ${m.code} (${m.name}): ${m.mean.toFixed(2)} ${i===0?stars:''}\n`});
+                const tukey=tukeyHSD(S.data,an.msE,an.dfE,alpha);
+                const sigPairs=tukey.comps.filter(c=>c.sig),nonSigPairs=tukey.comps.filter(c=>!c.sig);
+                out+=`\n3. PERBEDAAN SPESIFIK (Tukey HSD):\n`;
+                if(sigPairs.length>0){out+=`   Pasangan yang BERBEDA signifikan:\n`;sigPairs.forEach(c=>{out+=`   • ${c.s1} vs ${c.s2}: Δ = ${c.absDiff.toFixed(2)} > HSD ${c.hsd.toFixed(2)}\n`})}
+                if(nonSigPairs.length>0){out+=`   Pasangan yang SERUPA:\n`;nonSigPairs.forEach(c=>{out+=`   • ${c.s1} vs ${c.s2}: Δ = ${c.absDiff.toFixed(2)} < HSD ${c.hsd.toFixed(2)}\n`})}
+                out+=`\n4. INTERPRETASI PRAKTIS:\n`;out+=`   • Sampel terbaik: "${means[0].code}" dengan skor ${means[0].mean.toFixed(2)}\n`;
+                if(sigPairs.length>0)out+=`   • ${sigPairs.length} pasangan sampel berbeda signifikan\n`;
+                if(nonSigPairs.length>0)out+=`   • ${nonSigPairs.length} pasangan sampel serupa secara statistik\n`;
+            }else{out+=`2. INTERPRETASI:\n`;out+=`   • Semua sampel memiliki karakteristik sensorik yang serupa\n`;out+=`   • Pertimbangkan: (1) menambah panelis, (2) memperjelas atribut, (3) meningkatkan training\n`}
         }
     }
+    out+='\n'+'-'.repeat(55)+'\n';out+='📝 CATATAN METODOLOGIS:\n';
+    out+=`   • Standar: ${getStandard(S.method)}\n`;out+=`   • Skala: ${getScaleMax()}-point (min: ${getScaleMin()})\n`;
+    out+=`   • Jumlah panelis: ${S.method==='deskriptif'?(S.data[0]?.values.length||0):S.panelCt}\n`;
+    out+=`   • α = ${alpha} (tingkat kepercayaan ${((1-alpha)*100).toFixed(0)}%)\n`;
+    if(totalMissing>0)out+=`   • Missing data: ${totalMissing}/${totalVals} (${((totalMissing/totalVals)*100).toFixed(1)}%)\n`;
+    out+=`   • Hasil ini valid untuk populasi dan kondisi pengujian yang sama\n`;
+
+    // ============ REKOMENDASI ============
+    out+='\n'+'-'.repeat(55)+'\n';out+='🔄 REKOMENDASI TINDAK LANJUT:\n';
+    if(S.method==='triangel'||S.method==='duotrio'){
+        const totalCorrect=S.data.reduce((sum,s)=>sum+s.values.filter(v=>v===1).length,0);
+        const totalResp=S.data.reduce((sum,s)=>sum+s.values.length,0);
+        const pv=binomPVal(totalResp,totalCorrect,S.method==='triangel'?1/3:1/2);
+        if(pv<=alpha){out+=`   1. Lanjutkan ke uji deskriptif untuk mengkarakterisasi perbedaan\n`;out+=`   2. Dokumentasikan atribut yang membedakan sampel\n`}
+        else{out+=`   1. Verifikasi protokol pengujian (randomisasi, penyajian)\n`;out+=`   2. Tingkatkan jumlah panelis menjadi ≥${MP[S.method]?.rec||'30'}\n`}
+    }else if(S.method==='deskriptif'){out+=`   1. Lakukan sesi training panelis untuk kalibrasi\n`;out+=`   2. Kembangkan leksikon atribut yang disepakati bersama\n`;out+=`   3. Gunakan ANOVA per atribut dengan data per panelis\n`}
+    else{const an=twoWayANOVA(S.data);if(an&&an.fS>getFCrit(an.dfS,an.dfE,alpha)){out+=`   1. Fokus pengembangan pada sampel dengan skor tertinggi\n`;out+=`   2. Investigasi atribut yang menyebabkan perbedaan\n`}else{out+=`   1. Evaluasi kembali formulasi sampel\n`;out+=`   2. Tingkatkan training panelis untuk sensitivitas\n`}}
+
+    document.getElementById('outputContent').textContent=out;
+    updateConclusionBox(alpha);
+    genCharts();
+    switchTab('output');
 }
 
-out += '\n' + '-'.repeat(55) + '\n';
-out += '📝 CATATAN METODOLOGIS:\n';
-out += `   • Standar: ${getStandard(S.method)}\n`;
-out += `   • Skala: ${getScaleMax()}-point (min: ${getScaleMin()})\n`;
-out += `   • Jumlah panelis: ${S.method === 'deskriptif' ? (S.data[0]?.values.length || 0) : S.panelCt}\n`;
-out += `   • α = ${alpha} (tingkat kepercayaan ${((1-alpha)*100).toFixed(0)}%)\n`;
-out += `   • Asumsi statistik harus diverifikasi manual\n`;
-if (totalMissing > 0) {
-    out += `   • Missing data: ${totalMissing}/${totalVals} (${((totalMissing/totalVals)*100).toFixed(1)}%)\n`;
-}
-out += `   • Hasil ini valid untuk populasi dan kondisi pengujian yang sama\n`;
-                                    // ============ REKOMENDASI TINDAK LANJUT ============
-out += '\n' + '-'.repeat(55) + '\n';
-out += '🔄 REKOMENDASI TINDAK LANJUT:\n';
-
-if (S.method === 'triangel' || S.method === 'duotrio') {
-    const pv = binomPVal(totalResp, totalCorrect, S.method === 'triangel' ? 1/3 : 1/2);
-    if (pv <= alpha) {
-        out += `   1. Lanjutkan ke uji deskriptif untuk mengkarakterisasi perbedaan\n`;
-        out += `   2. Dokumentasikan atribut yang membedakan sampel\n`;
-        out += `   3. Pertimbangkan uji preferensi jika relevan\n`;
-    } else {
-        out += `   1. Verifikasi protokol pengujian (randomisasi, penyajian)\n`;
-        out += `   2. Tingkatkan jumlah panelis menjadi ≥${MP[S.method]?.rec || '30'}\n`;
-        out += `   3. Pastikan perbedaan sampel cukup besar untuk dideteksi\n`;
+// ==================== GEN CHARTS ====================
+function genCharts(){
+    S.charts.forEach(c=>{try{if(c?.canvas)c.destroy()}catch(e){}});S.charts=[];
+    const cc=document.getElementById('chartsContainer');
+    const maxScale=getScaleMax(),minScale=getScaleMin();
+    if(S.method==='triangel'||S.method==='duotrio'){
+        cc.innerHTML='<div class="chart-card"><div class="chart-title">📊 % Jawaban Benar per Sesi</div><canvas id="bc"></canvas></div><div class="chart-card"><div class="chart-title">🎯 Distribusi Total Jawaban</div><canvas id="pc"></canvas></div>';
+        const bctx=document.getElementById('bc')?.getContext('2d');if(bctx)S.charts.push(new Chart(bctx,{type:'bar',data:{labels:S.data.map(s=>s.code),datasets:[{label:'% Benar',data:S.data.map(s=>(s.values.filter(v=>v===1).length/s.values.length*100)),backgroundColor:['rgba(45,139,78,0.7)','rgba(232,117,12,0.7)'],borderColor:['#2d8b4e','#e8750c'],borderWidth:2}]},options:{responsive:!0,plugins:{legend:{display:!1}},scales:{y:{beginAtZero:!0,max:100,title:{display:!0,text:'Persentase Benar (%)'}}}}}));
+        const pctx=document.getElementById('pc')?.getContext('2d');if(pctx){const tc=S.data.reduce((sum,s)=>sum+s.values.filter(v=>v===1).length,0),tr=S.data.reduce((sum,s)=>sum+s.values.length,0);S.charts.push(new Chart(pctx,{type:'doughnut',data:{labels:['Benar','Salah'],datasets:[{data:[tc,tr-tc],backgroundColor:['rgba(45,139,78,0.7)','rgba(196,18,48,0.7)'],borderColor:['#2d8b4e','#c41230'],borderWidth:2}]},options:{responsive:!0,plugins:{legend:{position:'bottom'},title:{display:!0,text:'Total Semua Sesi',font:{size:14}}}}}))}
+    }else if(S.method==='deskriptif'){
+        cc.innerHTML='<div class="chart-card"><div class="chart-title">📊 Rata-rata Skor per Atribut</div><canvas id="bc"></canvas></div><div class="chart-card"><div class="chart-title">🎯 Profil Sensorik QDA (Spider Chart)</div><canvas id="rc"></canvas></div>';
+        const bctx=document.getElementById('bc')?.getContext('2d');if(bctx){const attrLabels=getQDAttrs();const datasets=S.data.map((s,i)=>({label:s.code,data:s.values.map(v=>v==='missing'?NaN:v),backgroundColor:`hsla(${i*120},70%,50%,0.7)`,borderColor:`hsl(${i*120},70%,40%)`,borderWidth:2}));S.charts.push(new Chart(bctx,{type:'bar',data:{labels:attrLabels,datasets},options:{responsive:!0,plugins:{legend:{position:'top'},title:{display:!0,text:'Perbandingan Skor per Atribut',font:{size:14}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw}`}}},scales:{y:{min:minScale,max:maxScale,title:{display:!0,text:'Skor'}},x:{title:{display:!0,text:'Atribut Sensori'}}}}}))}
+        const rctx=document.getElementById('rc')?.getContext('2d');if(rctx&&S.data.length>0&&S.data[0].values.length>=3){const attrLabels=getQDAttrs();S.charts.push(new Chart(rctx,{type:'radar',data:{labels:attrLabels,datasets:S.data.slice(0,5).map((s,i)=>({label:`${s.code} (${s.name})`,data:s.values.slice(0,attrLabels.length).map(v=>v==='missing'?NaN:v),borderColor:`hsl(${i*72},70%,50%)`,backgroundColor:`hsla(${i*72},70%,50%,0.15)`,borderWidth:2,pointBackgroundColor:`hsl(${i*72},70%,50%)`,pointBorderColor:'#fff',pointRadius:4}))},options:{responsive:!0,scales:{r:{min:minScale,max:maxScale,ticks:{stepSize:1}}},plugins:{title:{display:!0,text:'Profil Sensorik (QDA Spider Plot)',font:{size:14}},subtitle:{display:!0,text:'Sumbu = Atribut Sensori | Garis = Sampel',font:{size:11}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw}`}}}}))}
+    }else{
+        cc.innerHTML='<div class="chart-card"><div class="chart-title">📊 Rata-rata Skor per Sampel (±SD)</div><canvas id="bc"></canvas></div><div class="chart-card"><div class="chart-title">🎯 Profil Sensorik (Radar per Atribut)</div><canvas id="rc"></canvas></div>';
+        const bctx=document.getElementById('bc')?.getContext('2d');if(bctx){const means=S.data.map(s=>calcMean(s.values)),sds=S.data.map(s=>calcSD(s.values));S.charts.push(new Chart(bctx,{type:'bar',data:{labels:S.data.map(s=>s.code),datasets:[{label:'Mean ± SD',data:means,backgroundColor:S.data.map((_,i)=>`hsla(${i*120},70%,50%,0.7)`),borderColor:S.data.map((_,i)=>`hsl(${i*120},70%,40%)`),borderWidth:2}]},options:{responsive:!0,plugins:{legend:{display:!1},title:{display:!0,text:'Skor Rata-rata per Sampel',font:{size:14}},tooltip:{callbacks:{afterLabel:ctx=>`SD: ${sds[ctx.dataIndex]?.toFixed(2)||'N/A'}`}}},scales:{y:{min:minScale,max:maxScale,title:{display:!0,text:'Skor'}}}}}))}
+        const rctx=document.getElementById('rc')?.getContext('2d');if(rctx&&S.data.length>0&&S.data[0].values.length>=3){const nAttrs=Math.min(S.data[0].values.length,8);const sensorAttributes=['Warna','Aroma','Rasa','Tekstur','Aftertaste','Keseluruhan','Intensitas','Kesegaran'].slice(0,nAttrs);S.charts.push(new Chart(rctx,{type:'radar',data:{labels:sensorAttributes,datasets:S.data.slice(0,5).map((s,i)=>({label:`${s.code} (${s.name})`,data:s.values.slice(0,nAttrs).map(v=>v==='missing'?NaN:v),borderColor:`hsl(${i*72},70%,50%)`,backgroundColor:`hsla(${i*72},70%,50%,0.15)`,borderWidth:2,pointBackgroundColor:`hsl(${i*72},70%,50%)`,pointBorderColor:'#fff',pointRadius:4}))},options:{responsive:!0,scales:{r:{min:minScale,max:maxScale,ticks:{stepSize:1}}},plugins:{title:{display:!0,text:'Profil Sensorik per Atribut',font:{size:14}},subtitle:{display:!0,text:'Sumbu = Atribut Sensori | Garis = Sampel | Nilai = Rata-rata Panelis',font:{size:11}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw?.toFixed(1)||'N/A'}`}}}}))}
+        // Ranking chart (hanya untuk Jamak)
+        const means=S.data.map(s=>calcMean(s.values));const sds=S.data.map(s=>calcSD(s.values));const sorted=S.data.map((s,i)=>({code:s.code,mean:means[i],sd:sds[i]})).filter(s=>!isNaN(s.mean));sorted.sort((a,b)=>b.mean-a.mean);
+        if(sorted.length>0){cc.innerHTML+='<div class="chart-card" style="grid-column:1/-1"><div class="chart-title">🏆 Ranking Sampel</div><canvas id="rankingChart"></canvas></div>';setTimeout(()=>{const rctx2=document.getElementById('rankingChart')?.getContext('2d');if(rctx2)S.charts.push(new Chart(rctx2,{type:'bar',data:{labels:sorted.map(s=>s.code),datasets:[{label:'Mean ± SD',data:sorted.map(s=>s.mean),backgroundColor:sorted.map((_,i)=>i===0?'rgba(232,117,12,0.8)':i===sorted.length-1?'rgba(196,18,48,0.6)':'rgba(26,58,92,0.5)'),borderColor:sorted.map((_,i)=>i===0?'#e8750c':i===sorted.length-1?'#c41230':'#1a3a5c'),borderWidth:2}]},options:{indexAxis:'y',responsive:!0,plugins:{title:{display:!0,text:'Sampel Terbaik ke Terendah',font:{size:14}},tooltip:{callbacks:{afterLabel:ctx=>`SD: ${sorted[ctx.dataIndex]?.sd?.toFixed(2)||'N/A'}`}}},scales:{x:{min:minScale,max:maxScale,title:{display:!0,text:'Skor Rata-rata'}}}}}))},100)}
     }
-} else if (S.method === 'deskriptif') {
-    out += `   1. Lakukan sesi training panelis untuk kalibrasi\n`;
-    out += `   2. Kembangkan leksikon atribut yang disepakati bersama\n`;
-    out += `   3. Gunakan ANOVA per atribut dengan data per panelis\n`;
-    out += `   4. Pertimbangkan PCA untuk mereduksi dimensi atribut\n`;
-} else {
-    const an = twoWayANOVA(S.data);
-    if (an && an.fS > getFCrit(an.dfS, an.dfE, alpha)) {
-        out += `   1. Fokus pengembangan pada sampel dengan skor tertinggi\n`;
-        out += `   2. Investigasi atribut yang menyebabkan perbedaan\n`;
-        out += `   3. Lakukan uji stabilitas penyimpanan jika relevan\n`;
-    } else {
-        out += `   1. Evaluasi kembali formulasi sampel\n`;
-        out += `   2. Tingkatkan training panelis untuk sensitivitas\n`;
-        out += `   3. Pertimbangkan uji dengan kondisi ekstrim\n`;
-    }
-}
-                                    
-                document.getElementById('outputContent').textContent = out;
-                genCharts();
-                switchTab('output') }
-
-            function updateConclusionBox(alpha) {
-    const box = document.getElementById('conclusionBox');
-    const content = document.getElementById('conclusionContent');
-    if (!box || !content) return;
-    
-    box.style.display = 'block';
-    let html = '';
-    
-    if (S.method === 'triangel' || S.method === 'duotrio') {
-        const prob = S.method === 'triangel' ? 1/3 : 1/2;
-        const tc = S.data.reduce((sum, s) => sum + s.values.filter(v => v === 1).length, 0);
-        const tr = S.data.reduce((sum, s) => sum + s.values.length, 0);
-        const pv = binomPVal(tr, tc, prob);
-        
-        html += `<strong>Status:</strong> ${pv <= alpha ? '✅ Panelis DAPAT membedakan' : '❌ Panelis TIDAK dapat membedakan'}<br>`;
-        html += `<strong>Benar:</strong> ${tc}/${tr} (${((tc/tr)*100).toFixed(1)}%)<br>`;
-        html += `<strong>P-value:</strong> ${pv.toFixed(4)}<br>`;
-        html += `<strong>Kesimpulan:</strong> ${pv <= alpha ? 'Perbedaan sensorik terdeteksi' : 'Tidak cukup bukti perbedaan'}`;
-        
-    } else if (S.method === 'deskriptif') {
-        const means = S.data.map(s => calcMean(s.values));
-        const maxMean = Math.max(...means.filter(m => !isNaN(m)));
-        const bestSample = S.data[means.indexOf(maxMean)];
-        
-        html += `<strong>Sample Terbaik:</strong> ${bestSample?.code || 'N/A'} (${maxMean.toFixed(2)})<br>`;
-        html += `<strong>Atribut:</strong> ${getQDAttrs().join(', ')}<br>`;
-        html += `<strong>Catatan:</strong> Hasil deskriptif — untuk ANOVA diperlukan data per panelis`;
-        
-    } else {
-        const an = twoWayANOVA(S.data);
-        if (an) {
-            const pvS = fPVal(an.fS, an.dfS, an.dfE);
-            const means = S.data.map(s => ({ code: s.code, mean: calcMean(s.values) }));
-            means.sort((a, b) => b.mean - a.mean);
-            
-            html += `<strong>Status:</strong> ${an.fS > getFCrit(an.dfS, an.dfE, alpha) ? '✅ Ada perbedaan signifikan' : '❌ Tidak ada perbedaan signifikan'}<br>`;
-            html += `<strong>F:</strong> ${an.fS.toFixed(2)} (p = ${pvS.toFixed(4)})<br>`;
-            html += `<strong>Terbaik:</strong> ${means[0]?.code || 'N/A'} (${means[0]?.mean?.toFixed(2) || 'N/A'})<br>`;
-            html += `<strong>Terendah:</strong> ${means[means.length-1]?.code || 'N/A'} (${means[means.length-1]?.mean?.toFixed(2) || 'N/A'})`;
-        }
-    }
-    
-    content.innerHTML = html;
 }
 
-// Panggil di runAnalysis() sebelum switchTab('output'):
-updateConclusionBox(alpha);
-            // ==================== GEN CHARTS (RADAR FIX v2.0) ====================
-            function genCharts() {
-                S.charts.forEach(c => { try { if (c?.canvas) c.destroy() } catch (e) {} });
-                S.charts = [];
-                const cc = document.getElementById('chartsContainer');
-                const maxScale = getScaleMax(),
-                    minScale = getScaleMin();
+function exportOutput(){const out=document.getElementById('outputContent').textContent;const blob=new Blob([out],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`uji-organoleptik-v20-${new Date().toISOString().slice(0,10)}.txt`;a.click()}
 
-                if (S.method === 'triangel' || S.method === 'duotrio') {
-                    // ============ TRIANGEL / DUO-TRIO ============
-                    cc.innerHTML =
-                        '<div class="chart-card"><div class="chart-title">📊 % Jawaban Benar per Sesi</div><canvas id="bc"></canvas></div><div class="chart-card"><div class="chart-title">🎯 Distribusi Total Jawaban</div><canvas id="pc"></canvas></div>';
-                    const bctx = document.getElementById('bc')?.getContext('2d');
-                    if (bctx) S.charts.push(new Chart(bctx, {
-                        type: 'bar',
-                        data: {
-                            labels: S.data.map(s => s.code),
-                            datasets: [{
-                                label: '% Benar',
-                                data: S.data.map(s => (s.values.filter(v => v === 1)
-                                    .length / s.values.length * 100)),
-                                backgroundColor: ['rgba(45,139,78,0.7)',
-                                    'rgba(232,117,12,0.7)'
-                                ],
-                                borderColor: ['#2d8b4e', '#e8750c'],
-                                borderWidth: 2
-                            }]
-                        },
-                        options: {
-                            responsive: !0,
-                            plugins: { legend: { display: !1 } },
-                            scales: { y: { beginAtZero: !0, max: 100, title: { display: !0,
-                                        text: 'Persentase Benar (%)' } } }
-                        }
-                    }));
-                    const pctx = document.getElementById('pc')?.getContext('2d');
-                    if (pctx) {
-                        const totalCorrect = S.data.reduce((sum, s) => sum + s.values.filter(v => v ===
-                            1).length, 0);
-                        const totalResp = S.data.reduce((sum, s) => sum + s.values.length, 0);
-                        S.charts.push(new Chart(pctx, {
-                            type: 'doughnut',
-                            data: {
-                                labels: ['Benar', 'Salah'],
-                                datasets: [{
-                                    data: [totalCorrect, totalResp - totalCorrect],
-                                    backgroundColor: ['rgba(45,139,78,0.7)',
-                                        'rgba(196,18,48,0.7)'
-                                    ],
-                                    borderColor: ['#2d8b4e', '#c41230'],
-                                    borderWidth: 2
-                                }]
-                            },
-                            options: {
-                                responsive: !0,
-                                plugins: {
-                                    legend: { position: 'bottom' },
-                                    title: { display: !0, text: 'Total Semua Sesi',
-                                        font: { size: 14 } }
-                                }
-                            }
-                        }));
-                    }
+// ==================== TABS ====================
+function switchTab(tn){document.querySelectorAll('.tab-button').forEach(b=>b.classList.remove('active'));['tab-data','tab-variable','tab-output'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none'});const el=document.getElementById(`tab-${tn}`);if(el){if(tn==='data'){el.style.display='flex';el.style.flexDirection='column';el.style.flex='1';el.style.overflow='hidden'}else el.style.display='block'}const idx=['data','variable','output'].indexOf(tn);if(idx>=0)document.querySelectorAll('.tab-button')[idx].classList.add('active')}
+function applyVariables(){const nm=document.getElementById('varMethod').value;if(nm!==S.method){switchMethod(nm);return}if(S.method==='deskriptif'){const ai=document.getElementById('qdaAttributes')?.value||'',na=ai.split(',').map(a=>a.trim()).filter(a=>a);if(na.length>0){S.qdaAttrs=na;S.panelCt=na.length;document.getElementById('varPanelists').value=S.panelCt;S.data.forEach(s=>{while(s.values.length<S.panelCt)s.values.push(0);while(s.values.length>S.panelCt)s.values.pop()})}}else{const np=parseInt(document.getElementById('varPanelists').value),mp=MP[S.method]||{min:10};if(np<mp.min){notif(`Min ${mp.min}`,'warning');return}if(np!==S.panelCt&&np>=mp.min&&np<=200){S.panelCt=np;S.data.forEach(s=>{while(s.values.length<S.panelCt)s.values.push(0);while(s.values.length>S.panelCt)s.values.pop()})}}renderGrid();updateStatus();showWarnings();notif('✅ Diterapkan')}
+function updateStatus(){document.getElementById('statusMethod').textContent=`Method: ${getMethodName(S.method)}`;document.getElementById('statusInfo').textContent=`Samples: ${S.data.length} | N: ${S.method==='deskriptif'?(S.data[0]?.values.length||0):S.panelCt}`;const range=getRange(),cc2=(range.maxRow-range.minRow+1)*(range.maxCol-range.minCol+1);document.getElementById('statusSelection').textContent=`Sel: ${cc2}`}
 
-                } else if (S.method === 'deskriptif') {
-                    // ============ DESKRIPTIF QDA: Radar dengan ATRIBUT sebagai sumbu ============
-                    cc.innerHTML =
-                        '<div class="chart-card"><div class="chart-title">📊 Rata-rata Skor per Atribut</div><canvas id="bc"></canvas></div><div class="chart-card"><div class="chart-title">🎯 Profil Sensorik QDA (Spider Chart)</div><canvas id="rc"></canvas></div>';
+// ==================== GLOBAL ====================
+document.addEventListener('mouseup',()=>{if(S.drag){S.drag=!1;updateStatus()}});
+document.addEventListener('keydown',function(e){if(S.editing)return;if(document.activeElement===document.getElementById('formulaInput')){if(e.key==='Enter'){e.preventDefault();applyFormula()}return}if(document.activeElement?.tagName==='INPUT'||document.activeElement?.tagName==='SELECT')return;if(e.ctrlKey||e.metaKey){switch(e.key.toLowerCase()){case'c':e.preventDefault();copySelection();break;case'v':e.preventDefault();pasteSelection();break;case'a':e.preventDefault();setActive(0,0);setRange(0,S.data.length-1,0,S.method==='deskriptif'?(S.data[0]?.values.length||0)+3:S.panelCt+5);refreshSelection();break}return}switch(e.key){case'ArrowUp':e.preventDefault();navigate('up');break;case'ArrowDown':e.preventDefault();navigate('down');break;case'ArrowLeft':e.preventDefault();navigate('left');break;case'ArrowRight':e.preventDefault();navigate('right');break;case'Tab':e.preventDefault();navigate(e.shiftKey?'left':'right');break;case'Enter':e.preventDefault();const td=document.querySelector(`td[data-row="${S.active.row}"][data-col="${S.active.col}"]`);if(td&&td.dataset.edit==='1')startEdit(td,S.active.row,S.active.col);break;case'Delete':e.preventDefault();clearSelectedCells();break}});
+function handleFormulaKey(e){if(e.key==='Enter'){e.preventDefault();applyFormula()}}
+function formulaBarFocused(){const td=document.querySelector(`td[data-row="${S.active.row}"][data-col="${S.active.col}"]`);if(td&&td.dataset.edit==='1')startEdit(td,S.active.row,S.active.col)}
+function applyFormula(){if(S.editing){finishEdit();return}const val=document.getElementById('formulaInput').value,range=getRange();for(let r=range.minRow;r<=range.maxRow;r++)for(let c=range.minCol;c<=range.maxCol;c++){const td=document.querySelector(`td[data-row="${r}"][data-col="${c}"]`);if(td&&td.dataset.edit==='1')updateModel(r,c,val)}renderGrid()}
+document.addEventListener('contextmenu',function(e){const td=e.target.closest('td');if(td){e.preventDefault();const r=parseInt(td.dataset.row),c=parseInt(td.dataset.col);if(!isNaN(r)&&!isNaN(c)){setActive(r,c);setRange(r,c,r,c);refreshSelection()}document.getElementById('contextMenu').style.display='block';document.getElementById('contextMenu').style.left=e.pageX+'px';document.getElementById('contextMenu').style.top=e.pageY+'px'}});
+document.addEventListener('click',function(e){if(!e.target.closest('.context-menu'))document.getElementById('contextMenu').style.display='none'});
 
-                    // Bar chart: Grouped bar per atribut
-                    const bctx = document.getElementById('bc')?.getContext('2d');
-                    if (bctx) {
-                        const attrLabels = getQDAttrs();
-                        const datasets = S.data.map((s, i) => ({
-                            label: s.code,
-                            data: s.values.map(v => v === 'missing' ? NaN : v),
-                            backgroundColor: `hsla(${i*120},70%,50%,0.7)`,
-                            borderColor: `hsl(${i*120},70%,40%)`,
-                            borderWidth: 2
-                        }));
-                        S.charts.push(new Chart(bctx, {
-                            type: 'bar',
-                            data: { labels: attrLabels, datasets },
-                            options: {
-                                responsive: !0,
-                                plugins: {
-                                    legend: { position: 'top' },
-                                    title: { display: !0,
-                                        text: 'Perbandingan Skor per Atribut',
-                                        font: { size: 14 } },
-                                    tooltip: { callbacks: { label: ctx =>
-                                            `${ctx.dataset.label}: ${ctx.raw}` } }
-                                },
-                                scales: {
-                                    y: { min: minScale, max: maxScale, title: { display: !0,
-                                            text: 'Skor' } },
-                                    x: { title: { display: !0, text: 'Atribut Sensori' } }
-                                }
-                            }
-                        }));
-                    }
-
-                    // Radar chart: ATRIBUT sebagai sumbu, SAMPEL sebagai garis
-                    const rctx = document.getElementById('rc')?.getContext('2d');
-                    if (rctx && S.data.length > 0 && S.data[0].values.length >= 3) {
-                        const attrLabels = getQDAttrs();
-                        S.charts.push(new Chart(rctx, {
-                            type: 'radar',
-                            data: {
-                                labels: attrLabels,
-                                datasets: S.data.slice(0, 5).map((s, i) => ({
-                                    label: `${s.code} (${s.name})`,
-                                    data: s.values.slice(0, attrLabels.length).map(
-                                        v => v === 'missing' ? NaN : v),
-                                    borderColor: `hsl(${i*72},70%,50%)`,
-                                    backgroundColor: `hsla(${i*72},70%,50%,0.15)`,
-                                    borderWidth: 2,
-                                    pointBackgroundColor: `hsl(${i*72},70%,50%)`,
-                                    pointBorderColor: '#fff',
-                                    pointRadius: 4
-                                }))
-                            },
-                            options: {
-                                responsive: !0,
-                                scales: { r: { min: minScale, max: maxScale, ticks: { stepSize: 1 } } },
-                                plugins: {
-                                    title: { display: !0,
-                                        text: 'Profil Sensorik (QDA Spider Plot)',
-                                        font: { size: 14 } },
-                                    subtitle: { display: !0,
-                                        text: 'Sumbu = Atribut Sensori | Garis = Sampel',
-                                        font: { size: 11 } },
-                                    tooltip: { callbacks: { label: ctx =>
-                                            `${ctx.dataset.label}: ${ctx.raw}` } }
-                                }
-                            }
-                        }));
-                    }
-
-                } else {
-                    // ============ PERBANDINGAN JAMAK: Radar dengan ATRIBUT SENSORI sebagai sumbu ============
-                    cc.innerHTML =
-                        '<div class="chart-card"><div class="chart-title">📊 Rata-rata Skor per Sampel (±SD)</div><canvas id="bc"></canvas></div><div class="chart-card"><div class="chart-title">🎯 Profil Sensorik (Radar per Atribut)</div><canvas id="rc"></canvas></div>';
-
-                    // Bar chart: Mean per sampel
-                    const bctx = document.getElementById('bc')?.getContext('2d');
-                    if (bctx) {
-                        const means = S.data.map(s => calcMean(s.values));
-                        const sds = S.data.map(s => calcSD(s.values));
-                        S.charts.push(new Chart(bctx, {
-                            type: 'bar',
-                            data: {
-                                labels: S.data.map(s => s.code),
-                                datasets: [{
-                                    label: 'Mean ± SD',
-                                    data: means,
-                                    backgroundColor: S.data.map((_, i) =>
-                                        `hsla(${i*120},70%,50%,0.7)`),
-                                    borderColor: S.data.map((_, i) =>
-                                        `hsl(${i*120},70%,40%)`),
-                                    borderWidth: 2
-                                }]
-                            },
-                            options: {
-                                responsive: !0,
-                                plugins: {
-                                    legend: { display: !1 },
-                                    title: { display: !0,
-                                        text: 'Skor Rata-rata per Sampel',
-                                        font: { size: 14 } },
-                                    tooltip: { callbacks: { afterLabel: ctx =>
-                                            `SD: ${sds[ctx.dataIndex]?.toFixed(2)||'N/A'}` } }
-                                },
-                                scales: { y: { min: minScale, max: maxScale, title: { display: !0,
-                                            text: 'Skor' } } }
-                            }
-                        }));
-                    }
-
-                    // Radar chart: ATRIBUT SENSORI sebagai sumbu (bukan panelis!)
-                    const rctx = document.getElementById('rc')?.getContext('2d');
-                    if (rctx && S.data.length > 0 && S.data[0].values.length >= 3) {
-                        const nAttrs = Math.min(S.data[0].values.length, 8);
-                        // Label atribut sensori standar untuk radar
-                        const sensorAttributes = [
-                            'Warna', 'Aroma', 'Rasa', 'Tekstur', 'Aftertaste',
-                            'Keseluruhan', 'Intensitas', 'Kesegaran'
-                        ].slice(0, nAttrs);
-
-                        S.charts.push(new Chart(rctx, {
-                            type: 'radar',
-                            data: {
-                                labels: sensorAttributes,
-                                datasets: S.data.slice(0, 5).map((s, i) => ({
-                                    label: `${s.code} (${s.name})`,
-                                    data: s.values.slice(0, nAttrs).map(v => v ===
-                                        'missing' ? NaN : v),
-                                    borderColor: `hsl(${i*72},70%,50%)`,
-                                    backgroundColor: `hsla(${i*72},70%,50%,0.15)`,
-                                    borderWidth: 2,
-                                    pointBackgroundColor: `hsl(${i*72},70%,50%)`,
-                                    pointBorderColor: '#fff',
-                                    pointRadius: 4
-                                }))
-                            },
-                            options: {
-                                responsive: !0,
-                                scales: { r: { min: minScale, max: maxScale, ticks: { stepSize: 1 } } },
-                                plugins: {
-                                    title: { display: !0,
-                                        text: 'Profil Sensorik per Atribut',
-                                        font: { size: 14 } },
-                                    subtitle: { display: !0,
-                                        text: 'Sumbu = Atribut Sensori | Garis = Sampel | Nilai = Rata-rata Panelis',
-                                        font: { size: 11 } },
-                                    tooltip: { callbacks: { label: ctx =>
-                                            `${ctx.dataset.label}: ${ctx.raw?.toFixed(1)||'N/A'}` } }
-                                }
-                            }
-                        }));
-                    }
-                }
-            }
-
-            function exportOutput() { const out = document.getElementById('outputContent').textContent;
-                const blob = new Blob([out], { type: 'text/plain' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = `spss-v50-${new Date().toISOString().slice(0,10)}.txt`;
-                a.click() }
-
-            // ==================== TABS ====================
-            function switchTab(tn) { document.querySelectorAll('.tab-button').forEach(b => b.classList.remove(
-                'active'));
-                ['tab-data', 'tab-variable', 'tab-output'].forEach(id => { const el = document.getElementById(
-                    id); if (el) el.style.display = 'none' });
-                const el = document.getElementById(`tab-${tn}`);
-                if (el) { if (tn === 'data') { el.style.display = 'flex';
-                        el.style.flexDirection = 'column';
-                        el.style.flex = '1';
-                        el.style.overflow = 'hidden' } else el.style.display = 'block' }
-                const idx = ['data', 'variable', 'output'].indexOf(tn); if (idx >= 0) document.querySelectorAll(
-                    '.tab-button')[idx].classList.add('active') }
-
-            function applyVariables() { const nm = document.getElementById('varMethod').value; if (nm !== S.method) {
-                    switchMethod(nm); return }
-                if (S.method === 'deskriptif') { const ai = document.getElementById('qdaAttributes')?.value || '',
-                        na = ai.split(',').map(a => a.trim()).filter(a => a); if (na.length > 0) { S.qdaAttrs =
-                        na;
-                        S.panelCt = na.length;
-                        document.getElementById('varPanelists').value = S.panelCt;
-                        S.data.forEach(s => { while (s.values.length < S.panelCt) s.values.push(
-                            0); while (s.values.length > S.panelCt) s.values.pop() }) } } else { const
-                    np = parseInt(document.getElementById('varPanelists').value),
-                        mp = MP[S.method] || { min: 10 }; if (np < mp.min) { notif(`Min ${mp.min}`,
-                        'warning'); return } if (np !== S.panelCt && np >= mp.min && np <= 200) { S
-                        .panelCt = np;
-                        S.data.forEach(s => { while (s.values.length < S.panelCt) s.values.push(
-                            0); while (s.values.length > S.panelCt) s.values.pop() }) } }
-                renderGrid();
-                updateStatus();
-                showWarnings();
-                notif('✅ Diterapkan') }
-
-            function updateStatus() { document.getElementById('statusMethod').textContent =
-                    `Method: ${getMethodName(S.method)}`;
-                document.getElementById('statusInfo').textContent =
-                    `Samples: ${S.data.length} | N: ${S.method==='deskriptif'?(S.data[0]?.values.length||0):S.panelCt}`;
-                const range = getRange(),
-                    cc2 = (range.maxRow - range.minRow + 1) * (range.maxCol - range.minCol + 1);
-                document.getElementById('statusSelection').textContent = `Sel: ${cc2}` }
-
-            // ==================== GLOBAL ====================
-            document.addEventListener('mouseup', () => { if (S.drag) { S.drag = !1;
-                    updateStatus() } });
-            document.addEventListener('keydown', function(e) { if (S.editing) return; if (document
-                    .activeElement === document.getElementById('formulaInput')) { if (e.key ===
-                        'Enter') { e.preventDefault();
-                        applyFormula() } return } if (document.activeElement?.tagName ===
-                    'INPUT' || document.activeElement?.tagName === 'SELECT') return; if (e
-                    .ctrlKey || e.metaKey) { switch (e.key.toLowerCase()) { case 'c':
-                            e.preventDefault();
-                            copySelection();
-                            break;
-                        case 'v':
-                            e.preventDefault();
-                            pasteSelection();
-                            break;
-                        case 'a':
-                            e.preventDefault();
-                            setActive(0, 0);
-                            setRange(0, S.data.length - 1, 0, S.method === 'deskriptif' ? (
-                                S.data[0]?.values.length || 0) + 3 : S.panelCt + 5);
-                            refreshSelection();
-                            break } return } switch (e.key) { case 'ArrowUp':
-                        e.preventDefault();
-                        navigate('up');
-                        break;
-                    case 'ArrowDown':
-                        e.preventDefault();
-                        navigate('down');
-                        break;
-                    case 'ArrowLeft':
-                        e.preventDefault();
-                        navigate('left');
-                        break;
-                    case 'ArrowRight':
-                        e.preventDefault();
-                        navigate('right');
-                        break;
-                    case 'Tab':
-                        e.preventDefault();
-                        navigate(e.shiftKey ? 'left' : 'right');
-                        break;
-                    case 'Enter':
-                        e.preventDefault();
-                        const td = document.querySelector(
-                            `td[data-row="${S.active.row}"][data-col="${S.active.col}"]`
-                            ); if (td && td.dataset.edit === '1') startEdit(td, S
-                            .active.row, S.active.col);
-                        break;
-                    case 'Delete':
-                        e.preventDefault();
-                        clearSelectedCells();
-                        break } });
-
-            function handleFormulaKey(e) { if (e.key === 'Enter') { e.preventDefault();
-                    applyFormula() } }
-
-            function formulaBarFocused() { const td = document.querySelector(
-                    `td[data-row="${S.active.row}"][data-col="${S.active.col}"]`); if (td && td.dataset
-                    .edit === '1') startEdit(td, S.active.row, S.active.col) }
-
-            function applyFormula() { if (S.editing) { finishEdit(); return }
-                const val = document.getElementById('formulaInput').value,
-                    range = getRange();
-                for (let r = range.minRow; r <= range.maxRow; r++)
-                    for (let c = range.minCol; c <= range.maxCol; c++) { const td = document.querySelector(
-                            `td[data-row="${r}"][data-col="${c}"]`); if (td && td.dataset.edit ===
-                        '1') updateModel(r, c, val) }
-                renderGrid() }
-            document.addEventListener('contextmenu', function(e) { const td = e.target.closest('td'); if (td) { e
-                    .preventDefault();
-                    const r = parseInt(td.dataset.row),
-                        c = parseInt(td.dataset.col); if (!isNaN(r) && !isNaN(c)) { setActive(r,
-                        c);
-                        setRange(r, c, r, c);
-                        refreshSelection() }
-                    document.getElementById('contextMenu').style.display = 'block';
-                    document.getElementById('contextMenu').style.left = e.pageX + 'px';
-                    document.getElementById('contextMenu').style.top = e.pageY + 'px' } });
-            document.addEventListener('click', function(e) { if (!e.target.closest('.context-menu')) document
-                    .getElementById('contextMenu').style.display = 'none' });
-
-            // ==================== INIT ====================
-            window.onload = function() { initData();
-                renderGrid();
-                setupEvents();
-                updateStatus();
-                updateToolbarBtns();
-                document.getElementById('varMethod').value = S.method;
-                document.getElementById('varPanelists').value = S.panelCt;
-                document.getElementById('varPanelists').min = MP[S.method]?.min || 10;
-                document.getElementById('minPanelistNote').textContent =
-                    `Min: ${MP[S.method]?.min||10} (rek: ${MP[S.method]?.rec||''})`;
-                updateMethodologyNote(); if (S.method === 'deskriptif') { document.getElementById(
-                        'qdaAttributesGroup').style.display = 'flex';
-                    document.getElementById('trainedPanelGroup').style.display = 'flex' } };
-            window.switchMethod = switchMethod;
-            window.switchTab = switchTab;
-            window.applyVariables = applyVariables;
-            window.runAnalysis = runAnalysis;
-            window.copySelection = copySelection;
-            window.pasteSelection = pasteSelection;
-            window.clearSelectedCells = clearSelectedCells;
-            window.insertRow = insertRow;
-            window.deleteRow = deleteRow;
-            window.applyFormula = applyFormula;
-            window.handleFormulaKey = handleFormulaKey;
-            window.formulaBarFocused = formulaBarFocused;
-            window.exportOutput = exportOutput;
-            window.generateRandomCodes = generateRandomCodes;
-            window.exportCSV = exportCSV;
-            window.toggleMissing = toggleMissing;
-        })();
-    </script>
+// ==================== INIT ====================
+window.onload=function(){initData();renderGrid();setupEvents();updateStatus();updateToolbarBtns();document.getElementById('varMethod').value=S.method;document.getElementById('varPanelists').value=S.panelCt;document.getElementById('varPanelists').min=MP[S.method]?.min||10;document.getElementById('minPanelistNote').textContent=`Min: ${MP[S.method]?.min||10} (rek: ${MP[S.method]?.rec||''})`;updateMethodologyNote();if(S.method==='deskriptif'){document.getElementById('qdaAttributesGroup').style.display='flex';document.getElementById('trainedPanelGroup').style.display='flex'}};
+window.switchMethod=switchMethod;window.switchTab=switchTab;window.applyVariables=applyVariables;
+window.runAnalysis=runAnalysis;window.copySelection=copySelection;window.pasteSelection=pasteSelection;
+window.clearSelectedCells=clearSelectedCells;window.insertRow=insertRow;window.deleteRow=deleteRow;
+window.applyFormula=applyFormula;window.handleFormulaKey=handleFormulaKey;window.formulaBarFocused=formulaBarFocused;
+window.exportOutput=exportOutput;window.generateRandomCodes=generateRandomCodes;window.exportCSV=exportCSV;
+window.toggleMissing=toggleMissing;
+})();
+</script>
 </body>
 </html>
