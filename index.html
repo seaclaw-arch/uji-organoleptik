@@ -624,6 +624,11 @@
                 <span style="font-size:1.1rem;font-weight:700;color:var(--spss-blue)">📊 Output Analisis</span>
                 <button class="btn btn-sm btn-primary" onclick="exportOutput()">📥 TXT</button>
             </div>
+            <div id="conclusionBox" style="display:none; background:linear-gradient(135deg,#d4edda,#e8f5e9); 
+     padding:1.2rem; border-radius:8px; border:2px solid var(--success); margin-bottom:1rem;">
+    <h3 style="color:var(--success);margin-bottom:.5rem">📋 KESIMPULAN CEPAT</h3>
+    <div id="conclusionContent" style="font-size:.9rem;line-height:1.6"></div>
+</div>
             <div class="output-content" id="outputContent">Uji-Organoleptik v2.0 — Siap digunakan</div>
             <div class="results-summary" id="resultsSummary">
                 <h3>📈 Ringkasan</h3>
@@ -1417,11 +1422,250 @@
                         tk.comps.forEach(c => out +=
                             `${c.s1} vs ${c.s2}: Δ=${c.diff.toFixed(2)} ${c.sig?'✅':'❌'} [${c.lo.toFixed(2)},${c.hi.toFixed(2)}]\n`
                             ) } else out += '❌ TIDAK SIGNIFIKAN\n' }
+                                    out += '\n' + '='.repeat(55) + '\n';
+out += '📋 KESIMPULAN ANALISIS\n';
+out += '='.repeat(55) + '\n\n';
+
+if (S.method === 'triangel' || S.method === 'duotrio') {
+    // Kesimpulan untuk Triangel/Duo-Trio
+    const prob = S.method === 'triangel' ? 1/3 : 1/2;
+    const totalCorrect = S.data.reduce((sum, s) => sum + s.values.filter(v => v === 1).length, 0);
+    const totalResp = S.data.reduce((sum, s) => sum + s.values.length, 0);
+    const pv = binomPVal(totalResp, totalCorrect, prob);
+    
+    out += `1. HASIL UJI PEMBEDAAN:\n`;
+    out += `   ${pv <= alpha ? '✅' : '❌'} Panelis ${pv <= alpha ? 'DAPAT' : 'TIDAK DAPAT'} membedakan sampel secara signifikan\n`;
+    out += `   (${totalCorrect} dari ${totalResp} jawaban benar, p = ${pv.toFixed(4)}, α = ${alpha})\n\n`;
+    
+    out += `2. INTERPRETASI PRAKTIS:\n`;
+    if (pv <= alpha) {
+        out += `   • Produk yang diuji memiliki perbedaan sensorik yang nyata\n`;
+        out += `   • Perbedaan dapat dideteksi oleh panelis di atas batas tebakan (${(prob*100).toFixed(0)}%)\n`;
+        out += `   • ${S.method === 'triangel' ? 'Uji triangle' : 'Uji duo-trio'} mengkonfirmasi adanya perbedaan\n`;
+    } else {
+        out += `   • Tidak cukup bukti untuk menyatakan ada perbedaan sensorik\n`;
+        out += `   • Produk mungkin serupa secara sensorik\n`;
+        out += `   • Pertimbangkan meningkatkan jumlah panelis untuk deteksi yang lebih sensitif\n`;
+    }
+    
+} else if (S.method === 'deskriptif') {
+    // Kesimpulan untuk QDA
+    const attrs = getQDAttrs();
+    out += `1. PROFIL SENSORIK:\n`;
+    
+    // Cari atribut dengan perbedaan terbesar
+    let maxDiff = 0, maxAttr = '';
+    attrs.forEach((attr, ai) => {
+        const vals = S.data.map(s => s.values[ai]).filter(v => v !== 'missing' && !isNaN(v));
+        if (vals.length >= 2) {
+            const range = Math.max(...vals) - Math.min(...vals);
+            if (range > maxDiff) { maxDiff = range; maxAttr = attr; }
+        }
+    });
+    
+    out += `   • Atribut dengan variasi terbesar: "${maxAttr}" (rentang ${maxDiff.toFixed(1)} poin)\n`;
+    out += `   • Setiap sampel memiliki fingerprint sensorik yang berbeda\n\n`;
+    
+    out += `2. REKOMENDASI:\n`;
+    out += `   • Gunakan data per panelis untuk ANOVA yang valid\n`;
+    out += `   • Fokus pada atribut "${maxAttr}" untuk pengembangan produk\n`;
+    out += `   • Radar chart menunjukkan profil sensorik masing-masing sampel\n`;
+    
+} else {
+    // Kesimpulan untuk Perbandingan Jamak
+    const an = twoWayANOVA(S.data);
+    if (an) {
+        const pvS = fPVal(an.fS, an.dfS, an.dfE);
+        
+        out += `1. HASIL ANOVA:\n`;
+        out += `   ${an.fS > getFCrit(an.dfS, an.dfE, alpha) ? '✅' : '❌'} Terdapat perbedaan signifikan antar sampel\n`;
+        out += `   (F(${an.dfS},${an.dfE}) = ${an.fS.toFixed(2)}, p = ${pvS.toFixed(4)}, α = ${alpha})\n\n`;
+        cc.innerHTML += '<div class="chart-card" style="grid-column:1/-1"><div class="chart-title">🏆 Ranking Sampel</div><canvas id="rankingChart"></canvas></div>';
+
+const rctx2 = document.getElementById('rankingChart')?.getContext('2d');
+if (rctx2) {
+    const means = S.data.map(s => calcMean(s.values));
+    const sds = S.data.map(s => calcSD(s.values));
+    const sorted = S.data.map((s, i) => ({ code: s.code, mean: means[i], sd: sds[i] }))
+        .sort((a, b) => b.mean - a.mean);
+    
+    S.charts.push(new Chart(rctx2, {
+        type: 'bar',
+        data: {
+            labels: sorted.map(s => s.code),
+            datasets: [{
+                label: 'Mean ± SD',
+                data: sorted.map(s => s.mean),
+                backgroundColor: sorted.map((_, i) => 
+                    i === 0 ? 'rgba(232,117,12,0.8)' : 
+                    i === sorted.length-1 ? 'rgba(196,18,48,0.6)' : 
+                    'rgba(26,58,92,0.5)'
+                ),
+                borderColor: sorted.map((_, i) => 
+                    i === 0 ? '#e8750c' : 
+                    i === sorted.length-1 ? '#c41230' : 
+                    '#1a3a5c'
+                ),
+                borderWidth: 2
+            }]
+        },
+        options: {
+            indexAxis: 'y',  // Horizontal bar chart
+            responsive: !0,
+            plugins: {
+                title: { display: !0, text: 'Sampel Terbaik ke Terendah', font: { size: 14 } },
+                tooltip: { callbacks: { afterLabel: ctx => `SD: ${sorted[ctx.dataIndex]?.sd?.toFixed(2)||'N/A'}` } }
+            },
+            scales: { x: { min: minScale, max: maxScale, title: { display: !0, text: 'Skor Rata-rata' } } }
+        }
+    }));
+}
+        
+        if (an.fS > getFCrit(an.dfS, an.dfE, alpha)) {
+            // Tambahkan ranking sampel
+            const means = S.data.map(s => ({ code: s.code, name: s.name, mean: calcMean(s.values) }));
+            means.sort((a, b) => b.mean - a.mean);
+            
+            out += `2. RANKING SAMPEL (dari tertinggi ke terendah):\n`;
+            means.forEach((m, i) => {
+                const stars = '★'.repeat(i === 0 ? 3 : i === 1 ? 2 : 1);
+                out += `   ${i+1}. ${m.code} (${m.name}): ${m.mean.toFixed(2)} ${i === 0 ? stars : ''}\n`;
+            });
+            
+            // Hasil Tukey HSD
+            const tukey = tukeyHSD(S.data, an.msE, an.dfE, alpha);
+            const sigPairs = tukey.comps.filter(c => c.sig);
+            const nonSigPairs = tukey.comps.filter(c => !c.sig);
+            
+            out += `\n3. PERBEDAAN SPESIFIK (Tukey HSD):\n`;
+            if (sigPairs.length > 0) {
+                out += `   Pasangan yang BERBEDA signifikan:\n`;
+                sigPairs.forEach(c => {
+                    out += `   • ${c.s1} vs ${c.s2}: Δ = ${c.absDiff.toFixed(2)} > HSD ${c.hsd.toFixed(2)}\n`;
+                });
+            }
+            if (nonSigPairs.length > 0) {
+                out += `   Pasangan yang SERUPA:\n`;
+                nonSigPairs.forEach(c => {
+                    out += `   • ${c.s1} vs ${c.s2}: Δ = ${c.absDiff.toFixed(2)} < HSD ${c.hsd.toFixed(2)}\n`;
+                });
+            }
+            
+            out += `\n4. INTERPRETASI PRAKTIS:\n`;
+            out += `   • Sampel terbaik: "${means[0].code}" dengan skor ${means[0].mean.toFixed(2)}\n`;
+            if (sigPairs.length > 0) {
+                out += `   • ${sigPairs.length} pasangan sampel berbeda signifikan\n`;
+            }
+            if (nonSigPairs.length > 0) {
+                out += `   • ${nonSigPairs.length} pasangan sampel serupa secara statistik\n`;
+            }
+            out += `   • Gunakan hasil Tukey HSD untuk pengambilan keputusan\n`;
+            
+        } else {
+            out += `2. INTERPRETASI:\n`;
+            out += `   • Semua sampel memiliki karakteristik sensorik yang serupa\n`;
+            out += `   • Tidak ada perbedaan yang cukup besar untuk dinyatakan signifikan\n`;
+            out += `   • Pertimbangkan: (1) menambah panelis, (2) memperjelas atribut, (3) meningkatkan training\n`;
+        }
+    }
+}
+
+out += '\n' + '-'.repeat(55) + '\n';
+out += '📝 CATATAN METODOLOGIS:\n';
+out += `   • Standar: ${getStandard(S.method)}\n`;
+out += `   • Skala: ${getScaleMax()}-point (min: ${getScaleMin()})\n`;
+out += `   • Jumlah panelis: ${S.method === 'deskriptif' ? (S.data[0]?.values.length || 0) : S.panelCt}\n`;
+out += `   • α = ${alpha} (tingkat kepercayaan ${((1-alpha)*100).toFixed(0)}%)\n`;
+out += `   • Asumsi statistik harus diverifikasi manual\n`;
+if (totalMissing > 0) {
+    out += `   • Missing data: ${totalMissing}/${totalVals} (${((totalMissing/totalVals)*100).toFixed(1)}%)\n`;
+}
+out += `   • Hasil ini valid untuk populasi dan kondisi pengujian yang sama\n`;
+                                    // ============ REKOMENDASI TINDAK LANJUT ============
+out += '\n' + '-'.repeat(55) + '\n';
+out += '🔄 REKOMENDASI TINDAK LANJUT:\n';
+
+if (S.method === 'triangel' || S.method === 'duotrio') {
+    const pv = binomPVal(totalResp, totalCorrect, S.method === 'triangel' ? 1/3 : 1/2);
+    if (pv <= alpha) {
+        out += `   1. Lanjutkan ke uji deskriptif untuk mengkarakterisasi perbedaan\n`;
+        out += `   2. Dokumentasikan atribut yang membedakan sampel\n`;
+        out += `   3. Pertimbangkan uji preferensi jika relevan\n`;
+    } else {
+        out += `   1. Verifikasi protokol pengujian (randomisasi, penyajian)\n`;
+        out += `   2. Tingkatkan jumlah panelis menjadi ≥${MP[S.method]?.rec || '30'}\n`;
+        out += `   3. Pastikan perbedaan sampel cukup besar untuk dideteksi\n`;
+    }
+} else if (S.method === 'deskriptif') {
+    out += `   1. Lakukan sesi training panelis untuk kalibrasi\n`;
+    out += `   2. Kembangkan leksikon atribut yang disepakati bersama\n`;
+    out += `   3. Gunakan ANOVA per atribut dengan data per panelis\n`;
+    out += `   4. Pertimbangkan PCA untuk mereduksi dimensi atribut\n`;
+} else {
+    const an = twoWayANOVA(S.data);
+    if (an && an.fS > getFCrit(an.dfS, an.dfE, alpha)) {
+        out += `   1. Fokus pengembangan pada sampel dengan skor tertinggi\n`;
+        out += `   2. Investigasi atribut yang menyebabkan perbedaan\n`;
+        out += `   3. Lakukan uji stabilitas penyimpanan jika relevan\n`;
+    } else {
+        out += `   1. Evaluasi kembali formulasi sampel\n`;
+        out += `   2. Tingkatkan training panelis untuk sensitivitas\n`;
+        out += `   3. Pertimbangkan uji dengan kondisi ekstrim\n`;
+    }
+}
+                                    
                 document.getElementById('outputContent').textContent = out;
                 genCharts();
                 switchTab('output') }
 
-            // ==================== GEN CHARTS (RADAR FIX v5.0) ====================
+            function updateConclusionBox(alpha) {
+    const box = document.getElementById('conclusionBox');
+    const content = document.getElementById('conclusionContent');
+    if (!box || !content) return;
+    
+    box.style.display = 'block';
+    let html = '';
+    
+    if (S.method === 'triangel' || S.method === 'duotrio') {
+        const prob = S.method === 'triangel' ? 1/3 : 1/2;
+        const tc = S.data.reduce((sum, s) => sum + s.values.filter(v => v === 1).length, 0);
+        const tr = S.data.reduce((sum, s) => sum + s.values.length, 0);
+        const pv = binomPVal(tr, tc, prob);
+        
+        html += `<strong>Status:</strong> ${pv <= alpha ? '✅ Panelis DAPAT membedakan' : '❌ Panelis TIDAK dapat membedakan'}<br>`;
+        html += `<strong>Benar:</strong> ${tc}/${tr} (${((tc/tr)*100).toFixed(1)}%)<br>`;
+        html += `<strong>P-value:</strong> ${pv.toFixed(4)}<br>`;
+        html += `<strong>Kesimpulan:</strong> ${pv <= alpha ? 'Perbedaan sensorik terdeteksi' : 'Tidak cukup bukti perbedaan'}`;
+        
+    } else if (S.method === 'deskriptif') {
+        const means = S.data.map(s => calcMean(s.values));
+        const maxMean = Math.max(...means.filter(m => !isNaN(m)));
+        const bestSample = S.data[means.indexOf(maxMean)];
+        
+        html += `<strong>Sample Terbaik:</strong> ${bestSample?.code || 'N/A'} (${maxMean.toFixed(2)})<br>`;
+        html += `<strong>Atribut:</strong> ${getQDAttrs().join(', ')}<br>`;
+        html += `<strong>Catatan:</strong> Hasil deskriptif — untuk ANOVA diperlukan data per panelis`;
+        
+    } else {
+        const an = twoWayANOVA(S.data);
+        if (an) {
+            const pvS = fPVal(an.fS, an.dfS, an.dfE);
+            const means = S.data.map(s => ({ code: s.code, mean: calcMean(s.values) }));
+            means.sort((a, b) => b.mean - a.mean);
+            
+            html += `<strong>Status:</strong> ${an.fS > getFCrit(an.dfS, an.dfE, alpha) ? '✅ Ada perbedaan signifikan' : '❌ Tidak ada perbedaan signifikan'}<br>`;
+            html += `<strong>F:</strong> ${an.fS.toFixed(2)} (p = ${pvS.toFixed(4)})<br>`;
+            html += `<strong>Terbaik:</strong> ${means[0]?.code || 'N/A'} (${means[0]?.mean?.toFixed(2) || 'N/A'})<br>`;
+            html += `<strong>Terendah:</strong> ${means[means.length-1]?.code || 'N/A'} (${means[means.length-1]?.mean?.toFixed(2) || 'N/A'})`;
+        }
+    }
+    
+    content.innerHTML = html;
+}
+
+// Panggil di runAnalysis() sebelum switchTab('output'):
+updateConclusionBox(alpha);
+            // ==================== GEN CHARTS (RADAR FIX v2.0) ====================
             function genCharts() {
                 S.charts.forEach(c => { try { if (c?.canvas) c.destroy() } catch (e) {} });
                 S.charts = [];
