@@ -1314,112 +1314,132 @@
                 a.download = `sensori-${new Date().toISOString().slice(0,10)}.csv`;
                 a.click() }
 
-            // ==================== ANALYSIS ====================
-            function runAnalysis() { const alpha = parseFloat(document.getElementById('varAlpha')?.value || 0.05);
-                const mp = MP[S.method] || { min: 3 };
-                const effN = S.method === 'deskriptif' ? (S.data[0]?.values.length || 0) : S.panelCt;
-                if (S.method !== 'deskriptif' && effN < mp.min) { notif(
-                        `Min ${mp.min} panelis untuk ${getMethodName(S.method)}`, 'warning'); return }
-                const chk = document.querySelectorAll('#preAnalysisChecklist input[type=checkbox]');
-                const allChecked = Array.from(chk).every(c => c.checked);
-                if (!allChecked) { const proceed = confirm(
-                        '⚠️ Checklist pra-analisis belum lengkap.\n\nHasil analisis mungkin tidak valid menurut ISO 6658:2017 §7.\nRandomisasi kode sampel dan urutan penyajian adalah syarat wajib.\n\nLanjutkan analisis?'
-                        ); if (!proceed) return }
-                let out = '';
-                out += 'SPSS-Sensori v5.0 — Output\n';
-                out += '='.repeat(55) + '\n';
-                out += `Metode: ${getMethodName(S.method)} | α=${alpha} | N=${effN}\n`;
-                out += `Skala: ${getScaleMax()}-point (min=${getScaleMin()}) | ${new Date().toLocaleString()}\n`;
-                out += '='.repeat(55) + '\n\n';
-                if (!allChecked) out +=
-                '⚠️ Checklist pra-analisis tidak lengkap — hasil tidak compliant ISO 6658 §7.\n\n';
-                out += '⚠️ ASUMSI STATISTIK (verifikasi manual):\n';
-                out += '  □ Residual normal (Shapiro-Wilk / QQ-plot)\n';
-                out += '  □ Varians homogen (Levene test / residual vs fitted plot)\n';
-                out += '  □ Observasi independen\n';
-                out += '  ❗ Jika dilanggar → transformasi (log/sqrt) atau Friedman non-parametrik\n\n';
-                let totalVals = 0,
-                    totalMissing = 0;
-                S.data.forEach(s => { s.values.forEach(v => { totalVals++; if (v === 'missing')
-                    totalMissing++ }) });
-                if (totalMissing > 0) out +=
-                    `⚠️ Missing data: ${totalMissing}/${totalVals} (${((totalMissing/totalVals)*100).toFixed(1)}%)\n\n`;
+           // ==================== ANALYSIS (DENGAN KESIMPULAN OTOMATIS) ====================
+function runAnalysis(){
+    const alpha=parseFloat(document.getElementById('varAlpha')?.value||0.05);
+    const mp=MP[S.method]||{min:3};
+    const effN=S.method==='deskriptif'?(S.data[0]?.values.length||0):S.panelCt;
+    if(S.method!=='deskriptif'&&effN<mp.min){notif(`Min ${mp.min} panelis untuk ${getMethodName(S.method)}`,'warning');return}
+    
+    const chk=document.querySelectorAll('#preAnalysisChecklist input[type=checkbox]');
+    const allChecked=Array.from(chk).every(c=>c.checked);
+    if(!allChecked){const proceed=confirm('⚠️ Checklist pra-analisis belum lengkap.\n\nHasil analisis mungkin tidak valid menurut ISO 6658:2017 §7.\nRandomisasi kode sampel dan urutan penyajian adalah syarat wajib.\n\nLanjutkan analisis?');if(!proceed)return}
+    
+    let out='';out+='SPSS-Sensori v2.0 — Output Analisis\n';out+='='.repeat(60)+'\n';
+    out+=`Metode: ${getMethodName(S.method)} | α=${alpha} | N=${effN}\n`;
+    out+=`Skala: ${getScaleMax()}-point (min=${getScaleMin()}) | ${new Date().toLocaleString()}\n`;
+    out+='='.repeat(60)+'\n\n';
+    if(!allChecked)out+='⚠️ Checklist pra-analisis tidak lengkap — hasil tidak compliant ISO 6658 §7.\n\n';
+    out+='⚠️ ASUMSI STATISTIK (verifikasi manual):\n';
+    out+='  □ Residual normal (Shapiro-Wilk / QQ-plot)\n';
+    out+='  □ Varians homogen (Levene test / residual vs fitted plot)\n';
+    out+='  □ Observasi independen\n';
+    out+='  ❗ Jika dilanggar → transformasi (log/sqrt) atau Friedman non-parametrik\n\n';
+    
+    let totalVals=0,totalMissing=0;
+    S.data.forEach(s=>{s.values.forEach(v=>{totalVals++;if(v==='missing')totalMissing++})});
+    if(totalMissing>0)out+=`⚠️ Missing data: ${totalMissing}/${totalVals} (${((totalMissing/totalVals)*100).toFixed(1)}%) — telah dikecualikan dari perhitungan.\n\n`;
 
-                if (S.method === 'triangel' || S.method === 'duotrio') { const prob = S.method === 'triangel' ? 1 / 3 :
-                        1 / 2;
-                    out +=
-                        `UJI BINOMIAL (${S.method==='triangel'?'ISO 4120:2004':'ISO 10399:2017'})\n`;
-                    out += '-'.repeat(55) + '\n';
-                    out += `p0 = ${prob.toFixed(3)}\n\n`;
-                    S.data.forEach(s => { const cr = s.values.filter(v => v === 1).length,
-                            tr = s.values.length;
-                        const pv = binomPVal(tr, cr, prob);
-                        out +=
-                            `${s.name}: ${cr}/${tr} (${((cr/tr)*100).toFixed(1)}%) | p=${pv.toFixed(6)} ${pv<=alpha?'✅':'❌'}\n` });
-                    let tc = 0,
-                        tr2 = 0;
-                    S.data.forEach(s => { tc += s.values.filter(v => v === 1).length;
-                        tr2 += s.values.length });
-                    const ppv = binomPVal(tr2, tc, prob);
-                    const binData = S.data.map(s => s.values.map(v => v === 1 ? 1 : 0));
-                    const cq = cochranQ(binData);
-                    out += `\n⚠️ POOLED: ${tc}/${tr2} | p=${ppv.toFixed(6)}\n`;
-                    if (isNaN(cq.Q)) out += `   Cochran's Q: ${cq.note}\n`;
-                    else out +=
-                        `   Cochran's Q = ${cq.Q.toFixed(3)} ${cq.Q>3.84?'⚠️ Heterogen → gunakan PER-SESI':'✅ Homogen'}\n`;
-                    out += `   ISO 4120/10399: Analisis per-sesi adalah metode utama.\n` } else if (S.method ===
-                    'deskriptif') { out += 'QDA — DESKRIPTIF PER ATRIBUT (ISO 13299:2016)\n';
-                    out += '-'.repeat(55) + '\n';
-                    const attrs = getQDAttrs();
-                    out += `Atribut: ${attrs.join(', ')}\n`;
-                    const pt = document.getElementById('panelType')?.value || 'trained';
-                    if (pt !== 'trained') out += '⚠️ Panelis BUKAN terlatih — hasil EKSPLORATIF.\n';
-                    out += '\n⚠️ ANOVA per atribut membutuhkan skor individual per panelis.\n';
-                    out += '   Data saat ini: 1 nilai agregat per atribut per sampel.\n';
-                    out += '   Hanya statistik deskriptif yang valid:\n\n';
-                    out += 'Atribut        Mean A  Mean B  Mean C  Range\n';
-                    out += '-'.repeat(55) + '\n';
-                    attrs.forEach((attr, ai) => { const means = S.data.map(s => { const v = s.values[ai];
-                            return (v === 'missing' || isNaN(v)) ? NaN : v });
-                        const validM = means.filter(m => !isNaN(m));
-                        const mn = validM.length > 0 ? Math.min(...validM) : NaN,
-                            mx = validM.length > 0 ? Math.max(...validM) : NaN;
-                        out +=
-                            `${attr.padEnd(14)} ${means.map(m=>isNaN(m)?'NA'.padStart(6):m.toFixed(2).padStart(6)).join(' ')}  ${isNaN(mn)?'NA':mn.toFixed(1)}-${isNaN(mx)?'NA':mx.toFixed(1)}\n` }) } else { out +=
-                        'TWO-WAY ANOVA DENGAN BLOK (ISO 5495:2005)\n';
-                    out += '-'.repeat(55) + '\n';
-                    const an = twoWayANOVA(S.data);
-                    if (!an) { out += '❌ Data tidak cukup untuk ANOVA.\n';
-                        document.getElementById('outputContent').textContent = out;
-                        switchTab('output');
-                        genCharts(); return }
-                    const fcS = getFCrit(an.dfS, an.dfE, alpha),
-                        fcP = getFCrit(an.dfP, an.dfE, alpha),
-                        pvS = fPVal(an.fS, an.dfS, an.dfE);
-                    out += 'Source      SS       df     MS       F        F-crit   P-value\n';
-                    out += '-'.repeat(70) + '\n';
-                    out +=
-                        `Sampel     ${an.ssS.toFixed(2).padStart(8)} ${an.dfS.toString().padStart(5)} ${an.msS.toFixed(2).padStart(8)} ${an.fS.toFixed(3).padStart(7)} ${fcS.toFixed(3).padStart(8)} ${pvS.toFixed(4).padStart(8)}\n`;
-                    out +=
-                        `Panelis    ${an.ssP.toFixed(2).padStart(8)} ${an.dfP.toString().padStart(5)} ${an.msP.toFixed(2).padStart(8)} ${an.fP.toFixed(3).padStart(7)} ${fcP.toFixed(3).padStart(8)}\n`;
-                    out +=
-                        `Error      ${an.ssE.toFixed(2).padStart(8)} ${an.dfE.toString().padStart(5)} ${an.msE.toFixed(2).padStart(8)}\n`;
-                    out +=
-                    `Total      ${an.ssT.toFixed(2).padStart(8)}\n\n`;
-                    out +=
-                    `dfE dihitung dari observasi valid (N_valid - sampel - panelis + 1)\n`;
-                    out +=
-                    `F(${an.dfS},${an.dfE}) = ${an.fS.toFixed(3)}, p = ${pvS.toFixed(6)}\n`;
-                    if (an.fS > fcS) { out += '✅ SIGNIFIKAN\n\nTUKEY HSD:\n';
-                        const tk = tukeyHSD(S.data, an.msE, an.dfE, alpha);
-                        out +=
-                        `HSD = ${tk.hsd.toFixed(3)} (q=${tk.q.toFixed(3)})\n`;
-                        tk.comps.forEach(c => out +=
-                            `${c.s1} vs ${c.s2}: Δ=${c.diff.toFixed(2)} ${c.sig?'✅':'❌'} [${c.lo.toFixed(2)},${c.hi.toFixed(2)}]\n`
-                            ) } else out += '❌ TIDAK SIGNIFIKAN\n' }
-                document.getElementById('outputContent').textContent = out;
-                genCharts();
-                switchTab('output') }
+    // Variable penampung untuk kesimpulan
+    let conclusion='';
+
+    if(S.method==='triangel'||S.method==='duotrio'){
+        const prob=S.method==='triangel'?1/3:1/2;
+        out+=`UJI BINOMIAL (${S.method==='triangel'?'ISO 4120:2004':'ISO 10399:2017'})\n`;out+='-'.repeat(60)+'\n';
+        out+=`p0 = ${prob.toFixed(3)} (peluang tebakan acak)\n\n`;
+        S.data.forEach(s=>{const cr=s.values.filter(v=>v===1).length,tr=s.values.length;const pv=binomPVal(tr,cr,prob);out+=`${s.name}: ${cr}/${tr} (${((cr/tr)*100).toFixed(1)}%) | p=${pv.toFixed(6)} ${pv<=alpha?'✅':'❌'}\n`});
+        let tc=0,tr2=0;S.data.forEach(s=>{tc+=s.values.filter(v=>v===1).length;tr2+=s.values.length});
+        const ppv=binomPVal(tr2,tc,prob);
+        const binData=S.data.map(s=>s.values.map(v=>v===1?1:0));
+        const cq=cochranQ(binData);
+        out+=`\n⚠️ POOLED: ${tc}/${tr2} | p=${ppv.toFixed(6)}\n`;
+        if(isNaN(cq.Q))out+=`   Cochran's Q: ${cq.note}\n`;
+        else out+=`   Cochran's Q = ${cq.Q.toFixed(3)} ${cq.Q>3.84?'⚠️ Heterogen → gunakan PER-SESI':'✅ Homogen'}\n`;
+        out+=`   ISO 4120/10399: Analisis per-sesi adalah metode utama.\n`;
+
+        // KESIMPULAN TRIANGLE/DUO-TRIO
+        const isSig=ppv<=alpha, pct=((tc/tr2)*100).toFixed(1);
+        conclusion=`\n📋 KESIMPULAN & REKOMENDASI\n`+`=`.repeat(60)+`\n\n`;
+        conclusion+=isSig?`✅ SAMPEL DAPAT DIBEDAKAN SECARA SENSORIK\n`:`❌ SAMPEL TIDAK DAPAT DIBEDAKAN (SERUPA)\n`;
+        conclusion+=`• Panelis menjawab benar ${tc} dari ${tr2} kali (${pct}%).\n`;
+        conclusion+=`• Nilai p = ${ppv.toFixed(4)} ${isSig?'<':'>'} α = ${alpha} menunjukkan hasil ${isSig?'LEBIH BAIK DARI TEBAKAN ACAK':'TIDAK MELEBIHI PELUANG ACAK (1/3 atau 1/2)'}.\n`;
+        if(!isNaN(cq.Q)&&cq.Q>3.84) conclusion+=`• ⚠️ Terdeteksi heterogenitas antar sesi. Disarankan analisis per-sesi terpisah.\n`;
+        conclusion+=`\n💡 REKOMENDASI:\n`;
+        conclusion+=isSig?`  → Revisi formulasi jika target adalah keseragaman. Gunakan uji deskriptif untuk identifikasi atribut pembeda.\n`:`  → Formulasi dapat dianggap setara secara sensorik. Lanjutkan ke uji penerimaan konsumen atau stabilitas penyimpanan.\n`;
+    }else if(S.method==='deskriptif'){
+        out+='QDA — DESKRIPTIF PER ATRIBUT (ISO 13299:2016)\n';out+='-'.repeat(60)+'\n';
+        const attrs=getQDAttrs();out+=`Atribut: ${attrs.join(', ')}\n`;
+        const pt=document.getElementById('panelType')?.value||'trained';
+        if(pt!=='trained')out+='⚠️ Panelis BUKAN terlatih — hasil bersifat EKSPLORATIF.\n';
+        out+='\n⚠️ ANOVA per atribut membutuhkan skor individual per panelis.\n';
+        out+='   Data saat ini: 1 nilai agregat per atribut per sampel.\n';
+        out+='   Hanya statistik deskriptif yang valid:\n\n';
+        out+='Atribut        Mean A  Mean B  Mean C  Range\n';out+='-'.repeat(60)+'\n';
+        attrs.forEach((attr,ai)=>{
+            const means=S.data.map(s=>{const v=s.values[ai];return(v==='missing'||isNaN(v))?NaN:v});
+            const validM=means.filter(m=>!isNaN(m));
+            const mn=validM.length>0?Math.min(...validM):NaN,mx=validM.length>0?Math.max(...validM):NaN;
+            out+=`${attr.padEnd(14)} ${means.map(m=>isNaN(m)?'NA'.padStart(6):m.toFixed(2).padStart(6)).join(' ')}  ${isNaN(mn)?'NA':mn.toFixed(1)}-${isNaN(mx)?'NA':mx.toFixed(1)}\n`;
+        });
+
+        conclusion=`\n📋 KESIMPULAN & REKOMENDASI\n`+`=`.repeat(60)+`\n\n`;
+        conclusion+=`📝 PROFIL SENSORIK TERCATAT (DESKRIPTIF)\n`;
+        conclusion+=`• Data saat ini berupa nilai rata-rata per sampel, sehingga belum memenuhi syarat uji hipotesis statistik.\n`;
+        conclusion+=`• Pola menunjukkan kecenderungan atribut mana yang lebih dominan pada masing-masing sampel.\n`;
+        conclusion+=`\n💡 REKOMENDASI:\n`;
+        conclusion+=`  → Input ulang data PER PANELIS (bukan agregat) untuk menjalankan One-Way ANOVA per atribut.\n`;
+        conclusion+=`  → Pastikan panelis telah lolos seleksi & pelatihan ≥40 jam (ISO 8586) agar valid.\n`;
+        conclusion+=`  → Gunakan radar chart untuk visualisasi profil atribut setelah data lengkap.\n`;
+    }else{
+        out+='TWO-WAY ANOVA DENGAN BLOK PANELIS (ISO 5495:2005)\n';out+='-'.repeat(60)+'\n';
+        const an=twoWayANOVA(S.data);
+        if(!an){out+='❌ Data tidak cukup untuk ANOVA (perlu ≥2 sampel dengan data valid).\n';document.getElementById('outputContent').textContent=out;switchTab('output');genCharts();return}
+        const fcS=getFCrit(an.dfS,an.dfE,alpha),fcP=getFCrit(an.dfP,an.dfE,alpha),pvS=fPVal(an.fS,an.dfS,an.dfE);
+        out+='Source      SS       df     MS       F        F-crit   P-value\n';out+='-'.repeat(70)+'\n';
+        out+=`Sampel     ${an.ssS.toFixed(2).padStart(8)} ${an.dfS.toString().padStart(5)} ${an.msS.toFixed(2).padStart(8)} ${an.fS.toFixed(3).padStart(7)} ${fcS.toFixed(3).padStart(8)} ${pvS.toFixed(4).padStart(8)}\n`;
+        out+=`Panelis    ${an.ssP.toFixed(2).padStart(8)} ${an.dfP.toString().padStart(5)} ${an.msP.toFixed(2).padStart(8)} ${an.fP.toFixed(3).padStart(7)} ${fcP.toFixed(3).padStart(8)}\n`;
+        out+=`Error      ${an.ssE.toFixed(2).padStart(8)} ${an.dfE.toString().padStart(5)} ${an.msE.toFixed(2).padStart(8)}\n`;
+        out+=`Total      ${an.ssT.toFixed(2).padStart(8)}\n\n`;
+        out+=`dfE dihitung dari observasi valid (N_valid - sampel - panelis + 1)\n`;
+        out+=`F(${an.dfS},${an.dfE}) = ${an.fS.toFixed(3)}, p = ${pvS.toFixed(6)}\n`;
+        if(an.fS>fcS){out+='✅ SIGNIFIKAN\n\nTUKEY HSD:\n';const tk=tukeyHSD(S.data,an.msE,an.dfE,alpha);out+=`HSD = ${tk.hsd.toFixed(3)} (q=${tk.q.toFixed(3)})\n`;tk.comps.forEach(c=>out+=`${c.s1} vs ${c.s2}: Δ=${c.diff.toFixed(2)} ${c.sig?'✅':'❌'} [${c.lo.toFixed(2)},${c.hi.toFixed(2)}]\n`)}
+        else out+='❌ TIDAK SIGNIFIKAN\n';
+
+        // KESIMPULAN JAMAK (ANOVA)
+        const isSig=an.fS>fcS;
+        const means=S.data.map(s=>({code:s.code,mean:calcMean(s.values)})).filter(m=>!isNaN(m.mean)).sort((a,b)=>b.mean-a.mean);
+        conclusion=`\n📋 KESIMPULAN & REKOMENDASI\n`+`=`.repeat(60)+`\n\n`;
+        if(isSig){
+            const best=means[0], worst=means[means.length-1];
+            conclusion+=`✅ TERDAPAT PERBEDAAN NYATA ANTAR SAMPEL\n`;
+            conclusion+=`• Secara statistik, sampel tidak serupa (p = ${pvS.toFixed(4)} < α = ${alpha}).\n`;
+            conclusion+=`• Sampel "${best.code}" menerima skor tertinggi (x̄ = ${best.mean.toFixed(2)}), sedangkan "${worst.code}" terendah (x̄ = ${worst.mean.toFixed(2)}).\n`;
+            conclusion+=`• Uji Tukey HSD mengonfirmasi pasangan sampel mana yang benar-benar berbeda secara sensorik.\n`;
+            conclusion+=`\n💡 REKOMENDASI:\n`;
+            conclusion+=`  → Fokuskan pengembangan/R&D pada karakteristik yang membedakan "${best.code}" dan "${worst.code}".\n`;
+            conclusion+=`  → Lakukan uji deskriptif (QDA) untuk identifikasi atribut spesifik penyebab perbedaan.\n`;
+        }else{
+            conclusion+=`❌ TIDAK TERDAPAT PERBEDAAN NYATA\n`;
+            conclusion+=`• Data tidak cukup kuat untuk menyimpulkan adanya perbedaan sensorik antar sampel (p = ${pvS.toFixed(4)} > α = ${alpha}).\n`;
+            conclusion+=`• Variasi skor yang teramati lebih dipengaruhi oleh preferensi individu panelis atau kesalahan acak.\n`;
+            conclusion+=`\n💡 REKOMENDASI:\n`;
+            conclusion+=`  → Pertahankan formulasi saat ini, atau tingkatkan kontras stimulus jika tujuan uji adalah diskriminasi.\n`;
+            conclusion+=`  → Pertimbangkan penambahan jumlah panelis atau pengulangan sesi untuk meningkatkan power uji.\n`;
+        }
+    }
+
+    // Gabungkan catatan penting ke kesimpulan
+    conclusion+=`\n⚠️ CATATAN METODOLOGIS:\n`;
+    conclusion+=`• Hasil ini bergantung pada asumsi normalitas, homogenitas varians, dan independensi data.\n`;
+    conclusion+=`• Missing data telah di-handle secara eksplisit (tidak dianggap nol) agar mean & SD tidak bias.\n`;
+    conclusion+=`• Untuk publikasi ilmiah/akreditasi, lampirkan raw data, uji asumsi, dan output mentah statistik.\n`;
+    conclusion+=`• Sesuai ISO 6658:2017, keputusan akhir harus mempertimbangkan konteks produk, biaya, dan tujuan bisnis.\n`;
+
+    // Tambahkan ke output utama
+    out+=conclusion;
+    document.getElementById('outputContent').textContent=out;
+    genCharts();switchTab('output');
+}
 
             // ==================== GEN CHARTS (RADAR FIX v5.0) ====================
             function genCharts() {
